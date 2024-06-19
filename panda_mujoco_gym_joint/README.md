@@ -1,8 +1,8 @@
 Pour executer la simulation: 
 
-'''bash
+```bash
 python3 test_rl  --show_spaces --training --iterations 2000000 --final_test 
-'''
+```
 
 Explanation:
 --show_spaces, Show information about observation and action spaces.
