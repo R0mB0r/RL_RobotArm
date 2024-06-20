@@ -88,7 +88,7 @@ class Panda(MujocoRobotEnv):
         Returns:
         - np.ndarray: The target joint angles for the robot's arm.
         """
-        arm_joint_ctrl *= 0.01
+        arm_joint_ctrl *= 0.05
         current_arm_joint_angles = np.array([self.get_joint_angle(i) for i in range(7)])
         target_arm_joint_angles = current_arm_joint_angles + arm_joint_ctrl
         

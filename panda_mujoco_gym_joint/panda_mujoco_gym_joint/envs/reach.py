@@ -101,6 +101,9 @@ class PandaReachEnv(Panda):
         Returns:
         - tuple: Observation, reward, termination flag, truncation flag, and additional info.
         """
+
+        
+
         if np.array(action).shape != self.action_space.shape:
             raise ValueError("Action dimension mismatch")
 
@@ -200,5 +203,5 @@ class PandaReachEnv(Panda):
         - SupportsFloat: Euclidean distance between the two goals.
         """
         assert goal_a.shape == goal_b.shape
-        return np.linalg.norm(goal_a - goal_b, axis=-1)
+        return np.linalg.norm(goal_a - goal_b)
 

@@ -11,6 +11,8 @@ from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines3.common.env_util import make_vec_env
 
+import pdb
+
 def parse_args():
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description="Train a PPO agent on the PandaReach-v3 environment.")
@@ -28,11 +30,14 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
 
-    # Create the environment
-    env = gym.make("PandaReach-v3")
-    env.reset()
+   
 
     if args.show_spaces:
+        # Create the environment
+         # Create the environment
+        env = gym.make("PandaReach-v3")
+        env.reset()
+
         # Print observation and action space details
         print("_____OBSERVATION SPACE_____ \n")
         print("Sample observation:", env.observation_space.sample())  # Random observation sample
@@ -45,6 +50,7 @@ if __name__ == "__main__":
         # Create a vectorized environment for parallel processing
         env = make_vec_env("PandaReach-v3", n_envs=16)
         env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10.)
+
 
         # Initialize the PPO model
         model = PPO(
@@ -69,31 +75,29 @@ if __name__ == "__main__":
         env.save("vec_normalize.pkl")
 
     # Evaluate the trained model
-    eval_env = DummyVecEnv([lambda: gym.make("PandaReach-v3")])
+    
+    eval_env = DummyVecEnv([lambda: gym.make("PandaReach-v3", render_mode="human")])
     eval_env = VecNormalize.load("vec_normalize.pkl", eval_env)
 
     model = PPO.load("ppo-pandareach-v3")
 
-    mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=10, deterministic=True)
+    mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=10, deterministic=True, render=True)
     print(f"mean_reward={mean_reward:.2f} +/- {std_reward}")
 
     if args.final_test:
-        # Render the environment and visualize the agent's performance
-        env = gym.make("PandaReach-v3", render_mode="human")
-        observation, info = env.reset()
-        for i in range(1000):
-            action, _ = model.predict(observation, deterministic=True)
-            observation, reward, terminated, truncated, info = env.step(action)
-            print("reward: ", reward)
-            env.render()
-            
-            if terminated or truncated:
-                print(terminated, truncated)
-                observation, info = env.reset()
-
-            time.sleep(0.05)
+    # Render the environment and visualize the agent's performance
+        test_env = DummyVecEnv([lambda: gym.make("PandaReach-v3", render_mode="human")])
+        test_env = VecNormalize.load("vec_normalize.pkl", test_env)
+        observation = test_env.reset()
+        states = None
+        episode_starts = np.array([True])
         
-        env.close()
+        for i in range(1000):
+            actions, states = model.predict(observation, state=states, episode_start=episode_starts, deterministic=True)
+            new_observations, rewards, dones, infos = test_env.step(actions)
+    
+    
+        test_env.close()
 
 
 
