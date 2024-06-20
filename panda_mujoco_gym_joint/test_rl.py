@@ -88,15 +88,25 @@ if __name__ == "__main__":
     # Render the environment and visualize the agent's performance
         test_env = DummyVecEnv([lambda: gym.make("PandaReach-v3", render_mode="human")])
         test_env = VecNormalize.load("vec_normalize.pkl", test_env)
-        observation = test_env.reset()
+        
+        episode_count = 0
+        observations = test_env.reset()
         states = None
         episode_starts = np.array([True])
-        
-        for i in range(1000):
-            actions, states = model.predict(observation, state=states, episode_start=episode_starts, deterministic=True)
-            new_observations, rewards, dones, infos = test_env.step(actions)
-    
-    
+
+        t0 = time.time()
+
+        while (time.time() - t0) < 30.:
+            actions, states = model.predict(
+                observations,  # type: ignore[arg-type]
+                state=states,
+                episode_start=episode_starts,
+                deterministic=True,
+            )
+            
+            observations, rewards, dones, infos = test_env.step(actions)
+            time.sleep(0.05)
+
         test_env.close()
 
 
