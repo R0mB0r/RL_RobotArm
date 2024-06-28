@@ -1,22 +1,24 @@
 import os
 import numpy as np
 from typing import Any, SupportsFloat
-from panda_mujoco_gym_joint.envs.panda_env import Panda
+from xarm6_mujoco.envs.xarm6_env import Xarm6
+import pygame
+
 
 # Path to the MuJoCo model file for the reach environment
 MODEL_XML_PATH = os.path.join(os.path.dirname(__file__), "../assets/", "reach.xml")
 
-class PandaReachEnv(Panda):
+class Xarm6ReachEnv(Xarm6):
     def __init__(
         self,
-        distance_threshold: float = 0.05,
+        distance_threshold: float = 0.005,
         goal_xy_range: float = 0.3,
         goal_x_offset: float = 0.0,
         goal_z_range: float = 0.3,
         **kwargs: Any,
     ):
         """
-        Initialize the Panda Reach environment.
+        Initialize the Xarm6 Reach environment.
 
         Parameters:
         - distance_threshold (float): Distance within which the goal is considered achieved.
@@ -70,8 +72,8 @@ class PandaReachEnv(Panda):
         self.model.vis.global_.offwidth = self.width
         self.model.vis.global_.offheight = self.height
 
-        self.arm_joint_names = self._model_names.joint_names[0:7]
-        self.gripper_joint_names = self._model_names.joint_names[7:9]
+        self.arm_joint_names = self._model_names.joint_names[0:6]
+        self.gripper_joint_names = self._model_names.joint_names[6:12]
 
         # Set initial joint positions
         self._env_setup(self.neutral_joint_values)
@@ -102,12 +104,9 @@ class PandaReachEnv(Panda):
         - tuple: Observation, reward, termination flag, truncation flag, and additional info.
         """
 
-        
-
         if np.array(action).shape != self.action_space.shape:
             raise ValueError("Action dimension mismatch")
 
-        action = np.clip(action, self.action_space.low, self.action_space.high)
         self._set_action(action)
         self._mujoco_step(action)
         self._step_callback()
@@ -117,7 +116,7 @@ class PandaReachEnv(Panda):
 
         obs = self._get_obs().copy()
         info = {"is_success": self._is_success(obs["achieved_goal"], self.goal)}
-        terminated = info["is_success"]
+        terminated = bool(info["is_success"])
         truncated = self.compute_truncated(obs["achieved_goal"], self.goal, info)
         reward = self.compute_reward(obs["achieved_goal"], self.goal, info)
 
@@ -189,7 +188,29 @@ class PandaReachEnv(Panda):
         goal = np.array([0.0, 0.0, 0.05])
         noise = self.np_random.uniform(self.goal_range_low, self.goal_range_high)
         goal += noise
-        return np.array([0.5, 0.4, 0.5])  # Return a predefined goal position
+        return goal  # Return a predefined goal position
+    
+    def modify_goal_position(self, key):
+        step_size = 0.01  # Ajustez cette valeur selon vos besoins
+        current_goal = self.goal
+        if pygame.K_w in key:    # Augmente la coordonnée z
+            current_goal[2] += step_size
+        elif pygame.K_s in key:  # Diminue la coordonnée z
+            current_goal[2] -= step_size
+        elif pygame.K_a in key:  # Diminue la coordonnée x
+            current_goal[0] -= step_size
+        elif pygame.K_d in key:  # Augmente la coordonnée x
+            current_goal[0] += step_size
+        elif pygame.K_q in key:  # Diminue la coordonnée y
+            current_goal[1] -= step_size
+        elif pygame.K_e in key:  # Augmente la coordonnée y
+            current_goal[1] += step_size
+
+        # Limiter la position du goal à l'intérieur de la plage spécifiée
+        current_goal[0] = np.clip(current_goal[0], self.goal_range_low[0], self.goal_range_high[0])
+        current_goal[1] = np.clip(current_goal[1], self.goal_range_low[1], self.goal_range_high[1])
+        current_goal[2] = np.clip(current_goal[2], self.goal_range_low[2], self.goal_range_high[2])
+        self.goal = current_goal
 
     def goal_distance(self, goal_a: np.ndarray, goal_b: np.ndarray) -> SupportsFloat:
         """
@@ -204,4 +225,5 @@ class PandaReachEnv(Panda):
         """
         assert goal_a.shape == goal_b.shape
         return np.linalg.norm(goal_a - goal_b)
+
 
