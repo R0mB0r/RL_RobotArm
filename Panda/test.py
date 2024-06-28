@@ -10,13 +10,14 @@ if __name__ == "__main__":
 
     observation, info = env.reset()
 
+    print("Action Space Shape:", env.action_space.shape)
+    print("Action Space Sample:", env.action_space.sample())  # Random action sample
+
     for i in range(1000):
         action = env.action_space.sample()
-        print("action: ", action)
         observation, reward, terminated, truncated, info = env.step(action)
 
         if terminated or truncated:
-            print(terminated, truncated)
             observation, info = env.reset()
 
         time.sleep(0.05)
