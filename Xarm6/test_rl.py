@@ -35,9 +35,9 @@ def show_spaces(env):
     print("Action Space Shape:", env.action_space.shape)
     print("Action Space Sample:", env.action_space.sample())  # Random action sample
 
-def create_env(render_mode=None):
+def create_env(env_name,render_mode=None):
     """Create and wrap the environment."""
-    env = gym.make("Xarm6Reach-v3", render_mode=render_mode)
+    env = gym.make(env_name, render_mode=render_mode)
     env = Monitor(env)  # Wrap the environment with Monitor
     return env
 
@@ -55,8 +55,8 @@ def train_agent(env, iterations):
         verbose=1,
     )
     model.learn(total_timesteps=iterations)
-    model.save("ppo-xarm6reach-v3")
-    env.save("vec_normalize.pkl")
+    model.save("ppo-xarm6force-v3")
+    env.save("vec_normalize_force.pkl")
     return model
 
 def evaluate_agent(model, env):
@@ -93,13 +93,13 @@ if __name__ == "__main__":
         env.close()
 
     if args.training:
-        env = make_vec_env("Xarm6Reach-v3", n_envs=16)
+        env = make_vec_env("Xarm6Force-v3", n_envs=1)
         env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10.0)
         train_agent(env, args.iterations)
 
     if args.final_test:
-        eval_env = DummyVecEnv([lambda: create_env(render_mode="human")])
-        eval_env = VecNormalize.load("vec_normalize.pkl", eval_env)
-        model = PPO.load("ppo-xarm6reach-v3")
+        eval_env = DummyVecEnv([lambda: create_env("Xarm6Force-v3", render_mode="human")])
+        eval_env = VecNormalize.load("vec_normalize_force.pkl", eval_env)
+        model = PPO.load("ppo-xarm6force-v3")
         evaluate_agent(model, eval_env)
         final_test(model, eval_env)

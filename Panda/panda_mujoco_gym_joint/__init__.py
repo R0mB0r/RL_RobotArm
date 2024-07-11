@@ -10,7 +10,7 @@ for task in ["Push","Reach", "Slide", "PickAndPlace"]:
     register(
         id=env_id,
         entry_point=f"panda_mujoco_gym_joint.envs:Panda{task}Env",
-        max_episode_steps=200,
+        max_episode_steps=100,
     )
 
     ENV_IDS.append(env_id)

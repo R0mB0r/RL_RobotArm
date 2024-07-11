@@ -48,6 +48,31 @@ class Xarm6(MujocoRobotEnv):
             **kwargs,
         )
 
+    
+    def _initialize_simulation(self) -> None:
+        """
+        Initialize the MuJoCo simulation.
+
+        Loads the MuJoCo model and sets up the initial simulation parameters.
+        """
+        self.model = self._mujoco.MjModel.from_xml_path(self.fullpath)
+        # self.model.worldbody.find('body', "ee_center_body").add('geom', dclass='collision', size='0.05 0.05 0.01', pos='0.0 0 -0.2', type='box')
+        self.data = self._mujoco.MjData(self.model)
+
+        self._model_names = self._utils.MujocoModelNames(self.model)
+        self.model.vis.global_.offwidth = self.width
+        self.model.vis.global_.offheight = self.height
+
+        self.arm_joint_names = self._model_names.joint_names[0:6]
+        self.gripper_joint_names = self._model_names.joint_names[6:12]
+
+        # Set initial joint positions
+        self._env_setup(self.neutral_joint_values)
+        self.initial_time = self.data.time
+        self.initial_qvel = np.copy(self.data.qvel)
+
+
+    
     def _mujoco_step(self, action: Optional[np.ndarray] = None) -> None:
         """
         Perform a simulation step in MuJoCo.
@@ -84,7 +109,7 @@ class Xarm6(MujocoRobotEnv):
         Returns:
         - np.ndarray: The target joint angles for the robot's arm.
         """
-        arm_joint_ctrl *= 0.05
+        arm_joint_ctrl *= 0.025
         current_joint_angles = np.array([self.get_joint_angle(i) for i in range(12)])
         current_arm_joint_angles = current_joint_angles[:6]
         

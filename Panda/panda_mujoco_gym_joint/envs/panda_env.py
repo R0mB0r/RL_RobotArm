@@ -2,6 +2,7 @@ import numpy as np
 from gymnasium_robotics.envs.robot_env import MujocoRobotEnv
 from typing import Optional
 import mujoco
+import time
 
 # Default camera configuration for visualization
 DEFAULT_CAMERA_CONFIG = {
@@ -38,6 +39,8 @@ class Panda(MujocoRobotEnv):
         self.angle_max = np.array([2.9, 1.76, 0, 0, 2.9, 3.75, 2.9])
         self.block_gripper = block_gripper
         n_actions = 7 if block_gripper else 8
+
+        self.is_reached = False
 
         super().__init__(
             n_actions=n_actions,
@@ -104,12 +107,24 @@ class Panda(MujocoRobotEnv):
         Returns:
         - bool: True if the simulation was successfully reset.
         """
-        self.data.time = 0
-        self.data.qvel[:] = 0
-        if self.model.na != 0:
-            self.data.act[:] = 0
-        self.set_joint_neutral()
-        self._mujoco.mj_forward(self.model, self.data)
+        if self.is_reached:
+            self.data.time = 0
+            self.data.qvel[:] = 0
+            if self.model.na != 0:
+                self.data.act[:] = 0
+            joint_angles = np.array([self.get_joint_angle(i) for i in range(7)])
+            joint_velocities = np.array([0.0] * 7)
+            self.set_joint_angles(joint_angles)
+            self.set_joint_velocities(joint_velocities)
+            self._mujoco.mj_forward(self.model, self.data)
+        
+        else:
+            self.data.time = 0
+            self.data.qvel[:] = 0
+            if self.model.na != 0:
+                self.data.act[:] = 0
+            self.set_joint_neutral()
+            self._mujoco.mj_forward(self.model, self.data)
         return True
     
     def set_joint_neutral(self) -> None:
@@ -144,6 +159,7 @@ class Panda(MujocoRobotEnv):
         - float: The current angle of the specified joint.
         """
         return self._utils.get_joint_qpos(self.model, self.data, self.arm_joint_names[joint])[0]
+    
 
     def set_joint_angles(self, target_angles: np.ndarray) -> None:
         """
@@ -156,6 +172,19 @@ class Panda(MujocoRobotEnv):
             self._utils.set_joint_qpos(self.model, self.data, name, value)
         for name, value in zip(self.gripper_joint_names, target_angles[7:9]):
             self._utils.set_joint_qpos(self.model, self.data, name, value)
+        self._mujoco.mj_forward(self.model, self.data)
+
+    def set_joint_velocities(self, target_velocities: np.ndarray) -> None:
+        """
+        Set the robot's joint velocities to the specified target values.
+
+        Parameters:
+        - target_velocities (np.ndarray): The target velocities for the arm and gripper joints.
+        """
+        for name, value in zip(self.arm_joint_names, target_velocities[:7]):
+            self._utils.set_joint_qvel(self.model, self.data, name, value)
+        for name, value in zip(self.gripper_joint_names, target_velocities[7:9]):
+            self._utils.set_joint_qvel(self.model, self.data, name, value)
         self._mujoco.mj_forward(self.model, self.data)
 
     def get_ee_orientation(self) -> np.ndarray:

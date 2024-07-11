@@ -59,26 +59,6 @@ class Xarm6ReachEnv(Xarm6):
         self.nv = self.model.nv  # Number of velocities
         self.ctrl_range = self.model.actuator_ctrlrange  # Control range for actuators
 
-    def _initialize_simulation(self) -> None:
-        """
-        Initialize the MuJoCo simulation.
-
-        Loads the MuJoCo model and sets up the initial simulation parameters.
-        """
-        self.model = self._mujoco.MjModel.from_xml_path(self.fullpath)
-        self.data = self._mujoco.MjData(self.model)
-
-        self._model_names = self._utils.MujocoModelNames(self.model)
-        self.model.vis.global_.offwidth = self.width
-        self.model.vis.global_.offheight = self.height
-
-        self.arm_joint_names = self._model_names.joint_names[0:6]
-        self.gripper_joint_names = self._model_names.joint_names[6:12]
-
-        # Set initial joint positions
-        self._env_setup(self.neutral_joint_values)
-        self.initial_time = self.data.time
-        self.initial_qvel = np.copy(self.data.qvel)
 
     def _env_setup(self, neutral_joint_values: np.ndarray) -> None:
         """
@@ -188,7 +168,7 @@ class Xarm6ReachEnv(Xarm6):
         goal = np.array([0.0, 0.0, 0.05])
         noise = self.np_random.uniform(self.goal_range_low, self.goal_range_high)
         goal += noise
-        return goal  # Return a predefined goal position
+        return goal
     
     def modify_goal_position(self, key):
         step_size = 0.01  # Ajustez cette valeur selon vos besoins

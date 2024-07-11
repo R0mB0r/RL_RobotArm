@@ -59,6 +59,8 @@ class PandaReachEnv(Panda):
         self.nv = self.model.nv  # Number of velocities
         self.ctrl_range = self.model.actuator_ctrlrange  # Control range for actuators
 
+        self.training = True
+
     def _initialize_simulation(self) -> None:
         """
         Initialize the MuJoCo simulation.
@@ -106,20 +108,32 @@ class PandaReachEnv(Panda):
 
         if np.array(action).shape != self.action_space.shape:
             raise ValueError("Action dimension mismatch")
-
-        action = np.clip(action, self.action_space.low, self.action_space.high)
-        self._set_action(action)
-        self._mujoco_step(action)
-        self._step_callback()
-
-        if self.render_mode == "human":
-            self.render()
-
+        
+        self.is_reached = False
         obs = self._get_obs().copy()
         info = {"is_success": self._is_success(obs["achieved_goal"], self.goal)}
-        terminated = bool(info["is_success"])
         truncated = self.compute_truncated(obs["achieved_goal"], self.goal, info)
-        reward = self.compute_reward(obs["achieved_goal"], self.goal, info)
+        terminated = bool(info["is_success"])
+        
+        if terminated:
+            self.is_reached = True
+
+        if self.is_reached and not self.training:
+            obs = self._get_obs().copy()
+            info = {}
+            terminated = False
+            reward = 0.0
+
+        else:
+            action = np.clip(action, self.action_space.low, self.action_space.high)
+            self._set_action(action)
+            self._mujoco_step(action)
+            self._step_callback()
+
+            if self.render_mode == "human":
+                self.render()
+
+            reward = self.compute_reward(obs["achieved_goal"], self.goal, info)
 
         return obs, reward, terminated, truncated, info
 
@@ -190,6 +204,7 @@ class PandaReachEnv(Panda):
         noise = self.np_random.uniform(self.goal_range_low, self.goal_range_high)
         goal += noise
         return goal  # Return a predefined goal position
+
 
     def goal_distance(self, goal_a: np.ndarray, goal_b: np.ndarray) -> SupportsFloat:
         """
