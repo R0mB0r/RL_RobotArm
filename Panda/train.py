@@ -71,7 +71,6 @@ def final_test(model, env, test_duration=30):
     episode_starts = np.array([True])
 
     t0 = time.time()
-
     while (time.time() - t0) < test_duration:
         actions, states = model.predict(
             observations,
@@ -80,9 +79,6 @@ def final_test(model, env, test_duration=30):
             deterministic=True,
         )
         observations, rewards, dones, infos = env.step(actions)
-        if dones[0]:
-            print("Episode finished")
-            time.sleep(10)
         time.sleep(0.05)
 
     env.close()
@@ -104,7 +100,7 @@ if __name__ == "__main__":
         eval_env = DummyVecEnv([lambda: create_env(render_mode="human")])
         eval_env = VecNormalize.load("vec_normalize.pkl", eval_env)
         model = PPO.load("ppo-pandareach-v3")
-        evaluate_agent(model, eval_env)
+        #evaluate_agent(model, eval_env)
         final_test(model, eval_env)
 
 
