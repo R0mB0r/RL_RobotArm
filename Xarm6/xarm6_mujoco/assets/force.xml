@@ -20,9 +20,9 @@
         <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
         <geom name="floor" size="1 1 " type="plane" material="groundplane" condim="3" contype="1" conaffinity="1"/>
         <geom type="cylinder" size=".06 .06" pos="0 0 .06" rgba="1 1 1 1"/>
-        <geom type="box" class = "collision" group = "0" size=".02 .2 .4" pos="0.7 0.0 0.4" rgba="0.753 0.753 0.753 1"/>
-        <body name="wall" pos="0. 0. 0.">
-            <site name="target" pos="0.698 -0.0 0.7" size=".02 .02 .02" rgba="0 1 0 1" type="box"/>
+        <body name="wall" pos="0.7 0.0 0.4">
+            <geom type="box" class = "collision" group = "0" size=".02 .2 .4"  rgba="0.753 0.753 0.753 1"/>
+            <site name="target" pos="-0.02 0 0.2" />
         </body>
     </worldbody>
 

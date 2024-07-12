@@ -53,9 +53,10 @@ class Xarm6ForceEnv(Xarm6):
         self.ctrl_range = self.model.actuator_ctrlrange
 
         # Initialize variables for real-time plotting
-        self.fig, self.ax = plt.subplots()
+        self.fig, (self.ax1, self.ax2) = plt.subplots(2, 1)
+        self.distance_data = []
         self.force_data = []
-        self.force_treshold = 10.0
+        self.force_treshold = 5.0
 
 
     def _env_setup(self, neutral_joint_values: np.ndarray) -> None:
@@ -98,7 +99,6 @@ class Xarm6ForceEnv(Xarm6):
         reward = self.compute_reward(obs["achieved_goal"], obs["desired_goal"])
 
         # Update real-time plot
-        self.force_data.append(obs["achieved_goal"][3:6])  # Assuming force is from index 3 to 5
         self.update_plot()
 
 
@@ -121,15 +121,12 @@ class Xarm6ForceEnv(Xarm6):
             "desired_goal": np.concatenate([self.goal,self.goal_force]),
         }
     
-    def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, alpha=10000.0, beta=2.0, gamma=2) -> float:
+    def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, alpha=1, beta=2.0, gamma=2) -> float:
         ee_position = achieved_goal[0:3]
         goal_position = desired_goal[0:3]
         
-
-        position_error = np.linalg.norm(ee_position - goal_position)
-        is_reached = position_error < self.distance_threshold
-
-        print("Position Error:", position_error)
+        distance_to_goal = np.linalg.norm(ee_position - goal_position)
+        is_reached = distance_to_goal < self.distance_threshold
 
         if is_reached:
             ee_force = achieved_goal[3:6]
@@ -138,9 +135,12 @@ class Xarm6ForceEnv(Xarm6):
             reward = - beta * force_error_x
 
         else:
-            reward = - alpha * position_error
+            reward = - alpha * distance_to_goal
+        
+        self.distance_data.append(distance_to_goal)
+        self.force_data.append(achieved_goal[3:6])
 
-        return reward
+        return - alpha * distance_to_goal
 
     
     def _is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> np.float32:
@@ -167,22 +167,35 @@ class Xarm6ForceEnv(Xarm6):
         """
         goal = self._utils.get_site_xpos(self.model, self.data, "target").copy()
         return goal
-
+    
     def update_plot(self) -> None:
-            """
-            Update the real-time plot of force sensor data.
-            """
-            if len(self.force_data) > 0:
-                force_data_np = np.array(self.force_data)
-                if force_data_np.shape[1] == 3:  # Assuming force data is in 3D
-                    x_vals = np.arange(len(force_data_np))
-                    self.ax.clear()
-                    self.ax.plot(x_vals, force_data_np[:, 0], label='Force X')
-                    # self.ax.plot(x_vals, force_data_np[:, 1], label='Force Y')
-                    # self.ax.plot(x_vals, force_data_np[:, 2], label='Force Z')
-                    self.ax.set_xlabel('Time Step')
-                    self.ax.set_ylabel('Force')
-                    self.ax.set_title('Force Sensor Data')
-                    self.ax.legend()
-                    self.fig.canvas.draw()
-                    plt.pause(0.001)
+        """
+        Update the real-time plot of force sensor data and distance to the goal.
+        """
+        if len(self.force_data) > 0:
+            force_data_np = np.array(self.force_data)
+            x_vals = np.arange(len(force_data_np))
+
+            self.ax1.clear()
+            if force_data_np.shape[1] == 3:  # Assuming force data is in 3D
+                self.ax1.plot(x_vals, force_data_np[:, 0], label='Force X')
+                # self.ax1.plot(x_vals, force_data_np[:, 1], label='Force Y')
+                # self.ax1.plot(x_vals, force_data_np[:, 2], label='Force Z')
+            self.ax1.set_xlabel('Time Step')
+            self.ax1.set_ylabel('Force')
+            self.ax1.set_title('Force Sensor Data')
+            self.ax1.legend()
+
+        if len(self.distance_data) > 0:
+            distance_vals = np.array(self.distance_data)
+            x_vals = np.arange(len(distance_vals))
+
+            self.ax2.clear()
+            self.ax2.plot(x_vals, distance_vals, label='Distance to Goal', color='red')
+            self.ax2.set_xlabel('Time Step')
+            self.ax2.set_ylabel('Distance')
+            self.ax2.set_title('Distance to Goal')
+            self.ax2.legend()
+
+        self.fig.canvas.draw()
+        plt.pause(0.001)
