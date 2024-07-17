@@ -34,7 +34,7 @@ def get_force_sensor_data(data) -> np.ndarray:
 MODEL_XML_PATH = os.path.join(os.path.dirname(__file__), "../assets/", "force.xml")
 
 class Xarm6ForceEnv(Xarm6):
-    def __init__(self, distance_threshold: float = 0.05, goal_force=np.array([50,0,0]), **kwargs: Any):
+    def __init__(self, distance_threshold: float = 0.02, goal_force=np.array([40,0,0]), **kwargs: Any):
         self.model_path = MODEL_XML_PATH
         self.distance_threshold = distance_threshold
         self.goal_force = goal_force
@@ -121,7 +121,7 @@ class Xarm6ForceEnv(Xarm6):
             "desired_goal": np.concatenate([self.goal,self.goal_force]),
         }
     
-    def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, alpha=1, beta=2.0, gamma=2) -> float:
+    def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, alpha=1, beta=0.0001, gamma=2) -> float:
         ee_position = achieved_goal[0:3]
         goal_position = desired_goal[0:3]
         
@@ -130,8 +130,8 @@ class Xarm6ForceEnv(Xarm6):
 
         if is_reached:
             ee_force = achieved_goal[3:6]
-            goal_force_x = desired_goal[3]
-            force_error_x = abs(ee_force[0] - goal_force_x)
+            goal_force = desired_goal[3:6]
+            force_error_x = np.linalg.norm(ee_force - goal_force)
             reward = - beta * force_error_x
 
         else:
@@ -140,8 +140,7 @@ class Xarm6ForceEnv(Xarm6):
         self.distance_data.append(distance_to_goal)
         self.force_data.append(achieved_goal[3:6])
 
-        return - alpha * distance_to_goal
-
+        return reward
     
     def _is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> np.float32:
         
@@ -179,8 +178,9 @@ class Xarm6ForceEnv(Xarm6):
             self.ax1.clear()
             if force_data_np.shape[1] == 3:  # Assuming force data is in 3D
                 self.ax1.plot(x_vals, force_data_np[:, 0], label='Force X')
-                # self.ax1.plot(x_vals, force_data_np[:, 1], label='Force Y')
-                # self.ax1.plot(x_vals, force_data_np[:, 2], label='Force Z')
+                self.ax1.plot(x_vals, force_data_np[:, 1], label='Force Y')
+                self.ax1.plot(x_vals, force_data_np[:, 2], label='Force Z')
+                self.ax1.plot(x_vals, self.goal_force[0]*np.ones(len(force_data_np)), label='Goal Force X', linestyle='--', color='green')
             self.ax1.set_xlabel('Time Step')
             self.ax1.set_ylabel('Force')
             self.ax1.set_title('Force Sensor Data')
@@ -192,6 +192,7 @@ class Xarm6ForceEnv(Xarm6):
 
             self.ax2.clear()
             self.ax2.plot(x_vals, distance_vals, label='Distance to Goal', color='red')
+            self.ax2.plot(x_vals, self.distance_threshold*np.ones(len(force_data_np)), label='Threshold', linestyle='--', color='green')
             self.ax2.set_xlabel('Time Step')
             self.ax2.set_ylabel('Distance')
             self.ax2.set_title('Distance to Goal')
