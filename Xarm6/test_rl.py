@@ -64,7 +64,7 @@ def evaluate_agent(model, env):
     mean_reward, std_reward = evaluate_policy(model, env, n_eval_episodes=10, deterministic=True, render=True)
     print(f"mean_reward={mean_reward:.2f} +/- {std_reward}")
 
-def final_test(model, env, test_duration=30):
+def final_test(model, env, test_duration=120):
     """Run a final test to visualize the agent's performance."""
     observations = env.reset()
     states = None
@@ -101,5 +101,5 @@ if __name__ == "__main__":
         eval_env = DummyVecEnv([lambda: create_env("Xarm6Force-v3", render_mode="human")])
         eval_env = VecNormalize.load("vec_normalize_force.pkl", eval_env)
         model = PPO.load("ppo-xarm6force-v3")
-        evaluate_agent(model, eval_env)
+        #evaluate_agent(model, eval_env)
         final_test(model, eval_env)
