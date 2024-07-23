@@ -5,7 +5,7 @@ from gymnasium.envs.registration import register
 ENV_IDS = []
 
 for task in ["Reach", "Force"]:
-    env_id = f"Xarm6{task}-v3"
+    env_id = f"Xarm6{task}"
 
     register(
         id=env_id,
