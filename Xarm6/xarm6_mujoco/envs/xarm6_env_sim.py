@@ -60,6 +60,7 @@ class Xarm6(MujocoRobotEnv):
         action = action.copy()
         arm_joint_ctrl = action[:6]
         target_arm_angles = self.arm_joint_ctrl_to_target_arm_angles(arm_joint_ctrl)
+        # target_arm_angles = np.zeros(6)
         
         if self.block_gripper:
             target_fingers = [0.85, 0.839, 0.856]

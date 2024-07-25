@@ -3,7 +3,6 @@ import time
 import gymnasium as gym
 import xarm6_mujoco
 import numpy as np
-import pygame
 
 if __name__ == "__main__":
     

@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from typing import Any, SupportsFloat
-from xarm6_mujoco.envs.xarm6_env import Xarm6
+from Xarm6.xarm6_mujoco.envs.xarm6_env_sim import Xarm6
 import pygame
 
 MODEL_XML_PATH = os.path.join(os.path.dirname(__file__), "../assets/", "reach.xml")

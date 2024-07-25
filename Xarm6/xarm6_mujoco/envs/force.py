@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from typing import Any
-from xarm6_mujoco.envs.xarm6_env import Xarm6
+from Xarm6.xarm6_mujoco.envs.xarm6_env_sim import Xarm6
 import mujoco as mj
 import matplotlib.pyplot as plt
 
@@ -25,11 +25,12 @@ class Xarm6ForceEnv(Xarm6):
         self.num_velocities = self.model.nv
         self.ctrl_range = self.model.actuator_ctrlrange
 
-        self.fig, (self.ax1, self.ax2, self.ax3) = plt.subplots(3, 1)
+        self.fig, (self.ax1, self.ax2, self.ax3, self.ax4) = plt.subplots(4, 1)
         self.distance_data = []
         self.force_data = []
         self.force_threshold = 5.0
         self.speed_data = []
+        self.rotational_speed_data = []
 
     def _env_setup(self, neutral_joint_positions: np.ndarray) -> None:
         self.set_joint_neutral()
@@ -62,15 +63,16 @@ class Xarm6ForceEnv(Xarm6):
     def _get_obs(self) -> dict:
         ee_position = self._utils.get_site_xpos(self.model, self.data, "ee_center_site").copy()
         ee_velocity = self._utils.get_site_xvelp(self.model, self.data, "ee_center_site").copy() * self.dt
+        ee_rotational_velocity = self._utils.get_site_xvelr(self.model, self.data, "ee_center_site").copy() * self.dt
         ee_force = get_force_sensor_data(self.data)
 
         return {
-            "observation": np.concatenate([ee_position, ee_velocity, ee_force]),
+            "observation": np.concatenate([ee_position, ee_velocity, ee_rotational_velocity, ee_force]),
             "achieved_goal": np.concatenate([ee_position, ee_force]),
             "desired_goal": np.concatenate([self.goal, self.goal_force]),
         }
 
-    def compute_reward(self, observation: np.ndarray, achieved_goal: np.ndarray, desired_goal: np.ndarray, alpha=100, beta=0.0004, gamma=100) -> float:
+    def compute_reward(self, observation: np.ndarray, achieved_goal: np.ndarray, desired_goal: np.ndarray, alpha=100000, beta=0.001, gamma=1000) -> float:
         offset = 0.0013198
         ee_position = achieved_goal[0:3]
         goal_position = desired_goal[0:3]
@@ -80,19 +82,22 @@ class Xarm6ForceEnv(Xarm6):
         is_contact = np.linalg.norm(achieved_goal[3:6]) > 0
 
         ee_speed = observation[3:6]
-        ee_speed_error = np.linalg.norm(ee_speed) - offset
-
+        ee_speed_error = np.linalg.norm(ee_speed) 
+        ee_rotational_speed = observation[6:9]
+        ee_rotational_speed_error = np.linalg.norm(ee_rotational_speed)
+        
         if is_reached and is_contact:
             ee_force = achieved_goal[3:6]
             goal_force = desired_goal[3:6]
             force_error = np.linalg.norm(ee_force - goal_force)
-            reward = -beta * force_error - gamma * ee_speed_error
+            reward = -beta * force_error - gamma * ee_speed_error - 1000 * ee_rotational_speed_error
         else:
             reward = -alpha * distance_to_goal
         
         self.distance_data.append(distance_to_goal)
         self.force_data.append(achieved_goal[3:6])
         self.speed_data.append(ee_speed_error)
+        self.rotational_speed_data.append(ee_rotational_speed_error)
 
         return reward
 
@@ -146,5 +151,16 @@ class Xarm6ForceEnv(Xarm6):
             self.ax3.set_ylabel('Speed')
             self.ax3.set_title('End-effector Speed')
             self.ax3.legend()
+
+        if len(self.rotational_speed_data) > 0:
+            rotational_speed_vals = np.array(self.rotational_speed_data)
+            x_vals = np.arange(len(rotational_speed_vals))
+
+            self.ax4.clear()
+            self.ax4.plot(x_vals, rotational_speed_vals, label='EE Rotational Speed', color='red')
+            self.ax4.set_xlabel('Time Step')
+            self.ax4.set_ylabel('Rotational Speed')
+            self.ax4.set_title('End-effector Rotational Speed')
+            self.ax4.legend()
         
         plt.pause(0.001)
