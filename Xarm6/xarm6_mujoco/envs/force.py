@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from typing import Any
-from Xarm6.xarm6_mujoco.envs.xarm6_env_sim import Xarm6
+from xarm6_mujoco.envs.xarm6_env_sim import Xarm6
 import mujoco as mj
 import matplotlib.pyplot as plt
 

@@ -14,7 +14,7 @@ from stable_baselines3.common.env_util import make_vec_env
 def parse_args():
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description="Train a PPO agent on the Xarm6 environment.")
-    parser.add_argument("--env_name", type=str, default="Xarm6Force",
+    parser.add_argument("--env_name", type=str, default="Xarm6Reach",
                         help="Name of the environment to train the agent on.")
     parser.add_argument("--total_timesteps", type=int, default=1_000_000,
                         help="Total number of training iterations (timesteps).")
