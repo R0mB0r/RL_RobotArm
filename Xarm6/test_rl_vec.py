@@ -2,12 +2,14 @@ import os
 import numpy as np
 import time
 import argparse
+import gymnasium as gym
 import xarm6_mujoco
 
 from stable_baselines3 import PPO
 from stable_baselines3.common.evaluation import evaluate_policy
-
-from xarm6_mujoco.envs.reach_sim import Xarm6ReachEnv
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.env_util import make_vec_env
 
 import pdb
 
@@ -28,10 +30,10 @@ def parse_args():
                         help="Perform a simulation with rendering after training.")
     return parser.parse_args()
 
-def create_env(render_mode=None):
+def create_env(env_name, render_mode=None):
     """Create and wrap the environment."""
-    env = Xarm6ReachEnv(render_mode=render_mode)
-    return env
+    env = gym.make(env_name, render_mode=render_mode)
+    return Monitor(env)
 
 def show_spaces(env):
     """Print information about observation and action spaces."""
@@ -56,7 +58,9 @@ def train_agent(env, total_timesteps, env_name):
     )
     model.learn(total_timesteps)
     model_save_path = f"trainings/ppo-{env_name}.zip"
+    vec_normalize_path = f"trainings/vec_normalize-{env_name}.pkl"
     model.save(model_save_path)
+    env.save(vec_normalize_path)
     return model
 
 def evaluate_agent(model, env):
@@ -64,33 +68,29 @@ def evaluate_agent(model, env):
     mean_reward, std_reward = evaluate_policy(model, env, n_eval_episodes=10, deterministic=True, render=True)
     print(f"mean_reward={mean_reward:.2f} +/- {std_reward:.2f}")
 
+def simulation(model, env, test_duration=120, output_file="actions.txt"):
+    """Run a final test to visualize the agent's performance and save actions to a file."""
+    observations = env.reset()
+    states = None
+    episode_starts = np.array([True])
 
-def load_actions_from_file(action_file):
-    liste = []
-    with open(action_file, 'r') as file:
-        for line in file:
-            # Supprimer les crochets et autres caractères non numériques
-            cleaned_line = line.replace('[', '').replace(']', '').replace(',', '').strip()
-            # Transformer la ligne en liste de flottants
-            if cleaned_line:
-                values = np.array([float(x) for x in cleaned_line.split()])
-                liste.append(values)
-    return liste
-
-def simulation(env, action_file, test_duration=120):
-    """Run a final test to visualize the agent's performance."""
-    obs, _ = env.reset()
-    actions_list = load_actions_from_file(action_file)
-    action_index = 0
     t0 = time.time()
 
-    while (time.time() - t0) < test_duration and action_index < len(actions_list):
-        actions = actions_list[action_index]
-        print(actions)
-        action_index += 1
-        obs, _, _, _, _ = env.step(actions)
+    # Open the file in write mode
+    with open(output_file, "w") as file:
+        while (time.time() - t0) < test_duration:
+            actions, states = model.predict(
+                observations,
+                state=states,
+                episode_start=episode_starts,
+                deterministic=True,
+            )
+            # Write actions to the file
+            file.write(f"{actions}\n")
+            observations, _, _, _ = env.step(actions)
 
     env.close()
+
 
 if __name__ == "__main__":
     args = parse_args()
@@ -101,18 +101,18 @@ if __name__ == "__main__":
         env.close()
 
     if args.training:
-        env = create_env(render_mode="human")
-        model = train_agent(env, args.total_timesteps, args.env_name)
-        env.close()
+        env = make_vec_env(args.env_name, n_envs=1)
+        env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10.0)
+        train_agent(env, args.total_timesteps, args.env_name)
 
     if args.evaluate:
-        eval_env = create_env(render_mode="human")
-        model = PPO.load(f"trainings/ppo-{args.env_name}")
+        eval_env = DummyVecEnv([lambda: create_env(args.env_name, render_mode="human")])
+        eval_env = VecNormalize.load(f"trainings/vec_normalize-{args.env_name}.pkl", eval_env)
+        model = PPO.load(f"trainings/ppo-{args.env_name}.zip")
         evaluate_agent(model, eval_env)
-        eval_env.close()
 
     if args.simulation:
-        sim_env = create_env(render_mode="human")
-        action_file = "actions.txt"
-        simulation(sim_env,action_file)
-        sim_env.close()
+        sim_env = DummyVecEnv([lambda: create_env(args.env_name, render_mode="human")])
+        sim_env = VecNormalize.load(f"trainings/vec_normalize-{args.env_name}.pkl", sim_env)
+        model = PPO.load(f"trainings/ppo-{args.env_name}.zip")
+        simulation(model, sim_env)
