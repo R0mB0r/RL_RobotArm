@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from typing import Any, SupportsFloat
-from Xarm6.xarm6_mujoco.envs.xarm6_env_sim import Xarm6
+from xarm6_mujoco.envs.xarm6_env_sim import Xarm6
 import pygame
 
 MODEL_XML_PATH = os.path.join(os.path.dirname(__file__), "../assets/", "reach.xml")
@@ -99,7 +99,8 @@ class Xarm6ReachEnv(Xarm6):
         goal = np.array([0.0, 0.0, 0.05])
         noise = self.np_random.uniform(self.goal_range_low, self.goal_range_high)
         goal += noise
-        return goal
+        goal_fixed = np.array([0.340, -0.297, 0.341])
+        return goal_fixed
 
     def goal_distance(self, goal_a: np.ndarray, goal_b: np.ndarray) -> SupportsFloat:
         assert goal_a.shape == goal_b.shape
