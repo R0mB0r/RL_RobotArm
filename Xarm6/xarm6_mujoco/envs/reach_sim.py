@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from typing import Any, SupportsFloat
-from Xarm6.xarm6_mujoco.envs.xarm6_env_sim import Xarm6
+from xarm6_mujoco.envs.xarm6_env_sim import Xarm6
 import pygame
 
 MODEL_XML_PATH = os.path.join(os.path.dirname(__file__), "../assets/", "reach.xml")
@@ -97,7 +97,7 @@ class Xarm6ReachEnv(Xarm6):
 
     def _sample_goal(self) -> np.ndarray:
         goal = np.array([0.0, 0.0, 0.05])
-        noise = self.np_random.uniform(self.goal_range_low, self.goal_range_high)
+        noise = np.random.uniform(self.goal_range_low, self.goal_range_high)
         goal += noise
         return goal
 

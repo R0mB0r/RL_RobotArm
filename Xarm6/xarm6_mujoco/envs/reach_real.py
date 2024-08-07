@@ -1,8 +1,8 @@
 import os
 import numpy as np
 from typing import Any, SupportsFloat
-from Xarm6.xarm6_mujoco.envs.xarm6_env_reel import Xarm6Real
-l
+from xarm6_mujoco.envs.xarm6_env_real import Xarm6Real
+
 
 class Xarm6ReachEnvReal(Xarm6Real):
     def __init__(
@@ -18,12 +18,13 @@ class Xarm6ReachEnvReal(Xarm6Real):
         super().__init__(
             n_substeps=20,
             block_gripper=True,
-            **kwargs,
-        )
+            **kwargs,)
+        
 
     def _env_setup(self) -> None:
-        self.set_joint_neutral()
-        
+        super()._env_setup()
+        observation = self._get_obs()
+        return observation
 
     def step(self, action: np.ndarray) -> tuple:
         self._set_action(action)
@@ -36,10 +37,7 @@ class Xarm6ReachEnvReal(Xarm6Real):
 
         return observation, reward, terminated, truncated, info
 
-    def _is_success(self, achieved_position: np.ndarray, desired_goal: np.ndarray) -> np.float32:
-        distance = self.goal_distance(achieved_position, desired_goal)
-        return (distance < self.distance_threshold).astype(np.float32)
-
+    
     def _get_obs(self) -> dict:
         ee_position = self.get_ee_position()
         ee_velocity = self.get_ee_speed()
@@ -49,6 +47,10 @@ class Xarm6ReachEnvReal(Xarm6Real):
             "achieved_goal": ee_position,
             "desired_goal": self.goal,
         }
+
+    def _is_success(self, achieved_position: np.ndarray, desired_goal: np.ndarray) -> np.float32:
+        distance = self.goal_distance(achieved_position, desired_goal)
+        return (distance < self.distance_threshold).astype(np.float32)
 
     def compute_truncated(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict) -> bool:
         return False
