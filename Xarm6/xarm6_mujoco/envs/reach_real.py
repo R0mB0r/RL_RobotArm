@@ -1,8 +1,8 @@
 import os
 import numpy as np
 from typing import Any, SupportsFloat
-from Xarm6.xarm6_mujoco.envs.xarm6_env_reel import Xarm6Real
-l
+from xarm6_mujoco.envs.xarm6_env_real import Xarm6Real
+
 
 class Xarm6ReachEnvReal(Xarm6Real):
     def __init__(
