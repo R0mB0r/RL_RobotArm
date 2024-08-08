@@ -91,6 +91,32 @@ def simulation(model, env, test_duration=120, output_file="actions.txt"):
 
     env.close()
 
+# def load_actions_from_file(action_file):
+#     liste = []
+#     with open(action_file, 'r') as file:
+#         for line in file:
+#             # Supprimer les crochets et autres caractères non numériques
+#             cleaned_line = line.replace('[', '').replace(']', '').replace(',', '').strip()
+#             # Transformer la ligne en liste de flottants
+#             if cleaned_line:
+#                 values = np.array([[float(x) for x in cleaned_line.split()]])
+#                 liste.append(values)
+#     return liste
+
+# def simulation(env, action_file, test_duration=120):
+#     """Run a final test to visualize the agent's performance."""
+#     obs = env.reset()
+#     actions_list = load_actions_from_file(action_file)
+#     action_index = 0
+#     t0 = time.time()
+
+#     while (time.time() - t0) < test_duration and action_index < len(actions_list):
+#         actions = actions_list[action_index]
+#         action_index += 1
+#         pdb.set_trace()
+#         obs, _, _, _ = env.step(actions)
+
+#     env.close()
 
 if __name__ == "__main__":
     args = parse_args()
@@ -116,3 +142,5 @@ if __name__ == "__main__":
         sim_env = VecNormalize.load(f"trainings/vec_normalize-{args.env_name}.pkl", sim_env)
         model = PPO.load(f"trainings/ppo-{args.env_name}.zip")
         simulation(model, sim_env)
+        # action_file = "actions.txt"
+        # simulation(sim_env,action_file)
