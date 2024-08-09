@@ -143,10 +143,10 @@
 
   <actuator>
     <general name="act1" joint="joint1" class="size1"/>
-    <general name="act2" joint="joint2" class="size1" ctrlrange="-2.059 2.0944"/>
-    <general name="act3" joint="joint3" class="size2" ctrlrange="-0.19198 3.927"/>
+    <general name="act2" joint="joint2" class="size1" ctrlrange="-2.05 2.05"/>
+    <general name="act3" joint="joint3" class="size2" ctrlrange="0 3.9"/>
     <general name="act4" joint="joint4" class="size2"/>
-    <general name="act5" joint="joint5" class="size3" ctrlrange="-1.69297 3.14159"/>
+    <general name="act5" joint="joint5" class="size3" ctrlrange="-1.67 3.12"/>
     <general name="act6" joint="joint6" class="size3"/>
     <general name="gripper" tendon="split" forcerange="-50 50" ctrlrange="0 255" biastype="affine" gainprm="0.333" biasprm="0 -100 -10"/>
   </actuator>

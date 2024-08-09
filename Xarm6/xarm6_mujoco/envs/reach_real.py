@@ -12,7 +12,7 @@ class Xarm6ReachRealEnv(Xarm6Real):
         **kwargs: Any,
     ):
         self.distance_threshold = distance_threshold
-        self.goal = np.array([0.6, 0.0, 0.0])
+        self.goal = np.array([0.34, -0.3, 0.34])
         self.max_episode_steps = max_episode_steps
         
         super().__init__()

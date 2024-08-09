@@ -99,7 +99,7 @@ class Xarm6ReachEnv(Xarm6):
         goal = np.array([0.0, 0.0, 0.05])
         noise = np.random.uniform(self.goal_range_low, self.goal_range_high)
         goal += noise
-        goal_fixed = np.array([0.340, -0.297, 0.341])
+        goal_fixed = np.array([0.34, -0.3, 0.34])
         return goal_fixed
 
     def goal_distance(self, goal_a: np.ndarray, goal_b: np.ndarray) -> SupportsFloat:

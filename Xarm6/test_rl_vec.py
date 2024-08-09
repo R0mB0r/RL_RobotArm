@@ -77,17 +77,15 @@ def simulation(model, env, test_duration=120, output_file="actions.txt"):
     t0 = time.time()
 
     # Open the file in write mode
-    with open(output_file, "w") as file:
-        while (time.time() - t0) < test_duration:
-            actions, states = model.predict(
-                observations,
-                state=states,
-                episode_start=episode_starts,
-                deterministic=True,
-            )
-            # Write actions to the file
-            file.write(f"{actions}\n")
-            observations, _, _, _ = env.step(actions)
+    while (time.time() - t0) < test_duration:
+        actions, states = model.predict(
+            observations,
+            state=states,
+            episode_start=episode_starts,
+            deterministic=True,
+        )
+        # Write actions to the file
+        observations, _, _, _ = env.step(actions)
 
     env.close()
 

@@ -7,7 +7,7 @@ import numpy as np
 if __name__ == "__main__":
     
     # Crée l'environnement avec rendu MuJoCo
-    env = gym.make("Xarm6Reach-v3", render_mode="human")
+    env = gym.make("Xarm6ReachEnv", render_mode="human")
 
     # Réinitialise l'environnement
     observation, info = env.reset()
