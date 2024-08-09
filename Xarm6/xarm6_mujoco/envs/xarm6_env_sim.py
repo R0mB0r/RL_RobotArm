@@ -19,7 +19,7 @@ class Xarm6(MujocoRobotEnv):
     def __init__(
         self,
         n_substeps: int = 30,
-        model_path: str = "xarm.xml",
+        model_path: str = "xarm6.xml",
         block_gripper: bool = False,
         **kwargs,
     ):
@@ -79,6 +79,8 @@ class Xarm6(MujocoRobotEnv):
         for i in range(len(target_arm_joint_angles)):
             target_arm_joint_angles[i] = np.clip(target_arm_joint_angles[i], self.min_angles[i], self.max_angles[i])
         
+        # print(target_arm_joint_angles)
+
         return target_arm_joint_angles
 
     def _reset_sim(self) -> bool:
@@ -114,4 +116,37 @@ class Xarm6(MujocoRobotEnv):
         current_quaternion = np.empty(4)
         self._mujoco.mju_mat2Quat(current_quaternion, site_matrix)
         return current_quaternion
+    
+    def _get_obs(self):
+        pass
+    
+  
+if __name__ == "__main__":
+        # Créer une instance de la classe Xarm6
+    env = Xarm6(model_path="/home/yoshidalab/Documents/Romain/RL_RobotArm/Xarm6/xarm6_mujoco/assets/xarm6.xml", render_mode="human")
 
+
+    # Tester l'initialisation de la simulation
+    env._initialize_simulation()
+    print("Simulation initialized successfully.")
+
+    # Tester le reset de la simulation
+    reset_success = env._reset_sim()
+    print(f"Simulation reset successful: {reset_success}")
+
+    # Tester l'obtention de l'angle d'une articulation spécifique
+    joint_angle = env.get_joint_angle(0)
+    print(f"Joint 0 angle: {joint_angle}")
+
+    # Tester l'orientation du bout du bras
+    ee_orientation = env.get_ee_orientation()
+    print(f"End-effector orientation (quaternion): {ee_orientation}")
+
+    # Tester l'application d'une action (sans gripper bloqué)
+    action = np.array([0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1])  # Exemple d'action
+    env._set_action(action)
+    print("Action applied successfully.")
+
+    # Tester le pas de simulation (étape de Mujoco)
+    env._mujoco_step()
+    print("Mujoco step completed successfully.")
