@@ -57,21 +57,15 @@ def load_actions_from_file(action_file):
 
 def simulation(env, action_file):
     """Run a final test to visualize the agent's performance."""
-    observations = env._env_setup()
-    states = None
-    episode_starts = np.array([True])
+    obs = env.reset()
+    actions_list = load_actions_from_file(action_file)
+    action_index = 0
 
-    t0 = time.time()
-
-    while (time.time() - t0) < 120:
-        actions, states = model.predict(
-            observations,
-            state=states,
-            episode_start=episode_starts,
-            deterministic=True,
-        )
+    while action_index < len(actions_list):
+        actions = actions_list[action_index]
         print(actions)
-        observations, _, _, _, _ = env.step(actions)
+        action_index += 1
+        obs, _, _, _ = env.step(actions)
 
     env.close()
 
