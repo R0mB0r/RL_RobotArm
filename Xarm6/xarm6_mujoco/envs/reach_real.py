@@ -4,7 +4,7 @@ from typing import Any, SupportsFloat
 from xarm6_mujoco.envs.xarm6_env_real import Xarm6Real
 
 
-class Xarm6ReachEnvReal(Xarm6Real):
+class Xarm6ReachRealEnv(Xarm6Real):
     def __init__(
         self,
         distance_threshold: float = 0.005,
@@ -15,17 +15,13 @@ class Xarm6ReachEnvReal(Xarm6Real):
         self.goal = np.array([0.6, 0.0, 0.0])
         self.max_episode_steps = max_episode_steps
         
-        super().__init__(
-            n_substeps=20,
-            block_gripper=True,
-            **kwargs,)
+        super().__init__()
         
-
-    def _env_setup(self) -> None:
-        super()._env_setup()
+    def reset(self, **kwargs):
+        super().reset()
         observation = self._get_obs()
-        return observation
-
+        return observation, {}
+    
     def step(self, action: np.ndarray) -> tuple:
         self._set_action(action)
 

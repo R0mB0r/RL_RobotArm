@@ -66,6 +66,7 @@ class Xarm6(MujocoRobotEnv):
             target_fingers = [0.85, 0.839, 0.856]
 
         target_angles = np.concatenate((target_arm_angles, target_fingers, target_fingers))
+        print(target_angles)
         self.set_joint_angles(target_angles)
 
     def arm_joint_ctrl_to_target_arm_angles(self, arm_joint_ctrl: np.ndarray) -> np.ndarray:
