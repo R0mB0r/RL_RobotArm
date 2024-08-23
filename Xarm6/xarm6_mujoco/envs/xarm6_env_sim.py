@@ -128,7 +128,7 @@ class Xarm6(MujocoRobotEnv):
         site_matrix = self._utils.get_site_xmat(self.model, self.data, "ee_center_site").reshape(9, 1)
         current_quaternion = np.empty(4)
         self._mujoco.mju_mat2Quat(current_quaternion, site_matrix)
-        print(current_quaternion)
+        #print(current_quaternion)
         euler_angles = quaternion_to_euler_degrees(current_quaternion)  
         return euler_angles
     
@@ -165,7 +165,7 @@ if __name__ == "__main__":
     print(f"End-effector orientation: {ee_orientation}")
 
     # Tester l'application des angles des joints
-    target_angles = np.array([-0.96810611,  0.18228167,  1.2160042,   2.16417853,  0.4607767,  -2.12151656])
+    target_angles = np.array([-0.58983501, -0.08572703, -0.97932936, 2.37100247, -0.10409321, -2.11260381])
     env.set_joint_angles(target_angles)
     print("Joint angles set successfully.")
 
@@ -179,3 +179,7 @@ if __name__ == "__main__":
 
     ee_orientation = env.get_ee_orientation()
     print(f"End-effector orientation: {ee_orientation}")
+
+    # Tester l'obtention de tous les angles des joints
+    joint_angles = np.array([env.get_joint_angle(i) for i in range(6)])
+    print(f"All joint angles: {joint_angles}")

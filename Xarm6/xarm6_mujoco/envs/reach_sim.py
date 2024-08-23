@@ -9,7 +9,7 @@ MODEL_XML_PATH = os.path.join(os.path.dirname(__file__), "../assets/", "reach.xm
 class Xarm6ReachEnv(Xarm6):
     def __init__(
         self,
-        distance_threshold: float = 0.000,
+        distance_threshold: float = 0.005,
         goal_xy_range: float = 0.3,
         goal_x_offset: float = 0.0,
         goal_z_range: float = 0.3,
