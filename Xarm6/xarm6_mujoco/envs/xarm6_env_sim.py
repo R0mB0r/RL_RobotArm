@@ -33,8 +33,8 @@ class Xarm6(MujocoRobotEnv):
         # self.max_angles_gripper = np.array([6.28, 2.09, 3.93, 6.28, 3.14, 6.28, 0])
 
         self.neutral_joint_positions = np.array([0., 0., 0., 0., 0., 0.])
-        self.min_angles = np.array([-6.28, -2.06, -0.192, -6.28, -1.69, -6.28, 0])
-        self.max_angles = np.array([6.28, 2.09, 3.93, 6.28, 3.14, 6.28, 0])
+        self.min_angles = np.array([-6.28, -2.05, -3.9, -6.28, -1.67, -6.28])
+        self.max_angles = np.array([6.28, 2.05, 0, 6.28, 3.12, 6.28])
 
         self.block_gripper = block_gripper
         num_actions = 6 if block_gripper else 7
@@ -72,7 +72,7 @@ class Xarm6(MujocoRobotEnv):
         target_arm_angles = self.arm_joint_ctrl_to_target_arm_angles(arm_joint_ctrl)
         # target_arm_angles = np.zeros(6)
         
-        print(target_arm_angles)
+        #print(target_arm_angles)
 
         if self.block_gripper:
             target_fingers = [0.85, 0.839, 0.856]

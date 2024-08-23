@@ -51,40 +51,45 @@
         <body name="link2" pos="0 0.0775 0.115" quat="1 -1 0 0">
           <joint name="joint2" range="-2.059 2.0944" class="size1"/>
           <geom mesh="link2"/>
-          <body name="link3" pos="0.053 -0.28478 -0.00817" quat="0 -1 0 0">
+          <body name="link3" pos="0.053 -0.28478 -0.00817" quat="0 0 0 1">
             <joint name="joint3" class="size2"/>
             <geom mesh="link3"/>
-            <body name="link4" pos="0.08578 -0.16933 0.06658" quat="0.5 -0.5 0.5 0.5">
+            <body name="link4" pos="-0.08578 -0.16933 -0.06658" quat="0.5 0.5 -0.5 0.5">
               <joint name="joint4" class="size2"/>
               <geom mesh="link4"/>
-              <body name="link5" pos="0 0 -0.13555" quat="0.5 0.5 -0.5 -0.5">
+              <body name="link5" pos="0 0 0.13555" quat="0.5 -0.5 0.5 -0.5 ">
                 <joint name="joint5" class="size2"/>
                 <geom mesh="link5"/>
-                <body name="link6" pos="0.077 -0.071 0" quat="0.5 -0.5 -0.5 -0.5">
+                <body name="link6" pos="-0.077 -0.071 0" quat="0.5 0.5 -0.5 0.5">
                   <joint name="joint6" class="size3"/>
                   <geom material="gray" mesh="end_tool"/>
                     
-                  <body name="ee_center_body" pos="0.00275 -0.00878 -0.0644" quat="0 0 0 0">
+                  <body name="ee_center_body" pos="0 0 0.103" quat="0 0 0 0">
                     <site name="ee_center_site" size="0.01" group="3"/>
                     <!-- Adjusting position and size for better visibility -->
                     <geom name="end_effector" class = "collision" type="box" size="0.005 0.005 0.005" rgba="1 0 0 1"/>
                   </body>
                 </body>
+                
               </body>
+          
+              
             </body>
           </body>
        </body>
       </body>
     </body>
   </worldbody>
-
-  <actuator>
+  
+    <actuator>
     <general name="act1" joint="joint1" class="size1"/>
     <general name="act2" joint="joint2" class="size1" ctrlrange="-2.05 2.05"/>
-    <general name="act3" joint="joint3" class="size2" ctrlrange="0 3.9"/>
+    <general name="act3" joint="joint3" class="size2" ctrlrange="-3.9 0"/>
     <general name="act4" joint="joint4" class="size2"/>
     <general name="act5" joint="joint5" class="size3" ctrlrange="-1.67 3.12"/>
     <general name="act6" joint="joint6" class="size3"/>
   </actuator>
+
+
 
 </mujoco>
