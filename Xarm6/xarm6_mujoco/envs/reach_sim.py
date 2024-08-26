@@ -10,9 +10,9 @@ class Xarm6ReachEnv(Xarm6):
     def __init__(
         self,
         distance_threshold: float = 0.005,
-        goal_xy_range: float = 0.3,
+        goal_xy_range: float = 0.1,
         goal_x_offset: float = 0.0,
-        goal_z_range: float = 0.3,
+        goal_z_range: float = 0.1,
         **kwargs: Any,
     ):
         self.model_path = MODEL_XML_PATH
@@ -65,7 +65,7 @@ class Xarm6ReachEnv(Xarm6):
 
         observation = self._get_obs().copy()
         info = {"is_success": self._is_success(observation["achieved_goal"], self.goal)}
-        terminated = bool(info["is_success"])
+        terminated = False
         truncated = self.compute_truncated(observation["achieved_goal"], self.goal, info)
         reward = self.compute_reward(observation["achieved_goal"], self.goal, info)
 
@@ -73,6 +73,11 @@ class Xarm6ReachEnv(Xarm6):
 
     def _is_success(self, achieved_position: np.ndarray, desired_goal: np.ndarray) -> np.float32:
         distance = self.goal_distance(achieved_position, desired_goal)
+        
+        # Ouvrir le fichier en mode ajout (append) pour ne pas écraser les données existantes
+        with open("distances.txt", "a") as file:
+            file.write(f"{distance}\n")
+        # Vérifier si la distance est inférieure au seuil
         return (distance < self.distance_threshold).astype(np.float32)
 
     def _get_obs(self) -> dict:
@@ -100,7 +105,7 @@ class Xarm6ReachEnv(Xarm6):
         noise = np.random.uniform(self.goal_range_low, self.goal_range_high)
         goal += noise
         goal_fixed = np.array([0.34, -0.3, 0.34])
-        return goal_fixed
+        return goal
 
     def goal_distance(self, goal_a: np.ndarray, goal_b: np.ndarray) -> SupportsFloat:
         assert goal_a.shape == goal_b.shape

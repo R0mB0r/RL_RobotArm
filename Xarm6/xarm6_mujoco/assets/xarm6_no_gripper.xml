@@ -64,7 +64,7 @@
                   <joint name="joint6" class="size3"/>
                   <geom material="gray" mesh="end_tool"/>
                     
-                  <body name="ee_center_body" pos="0 0 0.068" quat="0 0 0 0">
+                  <body name="ee_center_body" pos="0 0 0.078" quat="0 0 0 0">
                     <site name="ee_center_site" size="0.01" group="3"/>
                     <!-- Adjusting position and size for better visibility -->
                     <geom name="end_effector" class = "collision" type="box" size="0.005 0.005 0.005" rgba="1 0 0 1"/>
