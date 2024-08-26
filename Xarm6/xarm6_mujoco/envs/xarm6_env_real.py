@@ -3,6 +3,7 @@ from gymnasium import spaces
 import numpy as np
 import time
 from xarm.wrapper import XArmAPI
+from math import pi
 
 class Xarm6Real(gym.Env):
     def __init__(self, n_actions=6, robot_ip='192.168.1.217'):
@@ -30,9 +31,17 @@ class Xarm6Real(gym.Env):
         self.t0 = time.time()
 
         self.speed = 1
-
     def reset(self):
+        """Réinitialise les angles des articulations à zéro et renvoie l'observation."""
+        # Réinitialisation de l'armature jusqu'à ce que les angles des articulations soient à zéro
         self.arm.reset()
+        current_joint_angles = np.array([self.get_joint_angle(i) for i in range(6)])
+        
+        # Vérifier si tous les angles sont à zéro
+        while not np.all(np.isclose(current_joint_angles, 0.0)):
+            time.sleep(1)
+            current_joint_angles = np.array([self.get_joint_angle(i) for i in range(6)])
+        
         return self._get_obs()
 
     def step(self, action):
@@ -58,7 +67,7 @@ class Xarm6Real(gym.Env):
         for i in range(len(target_arm_joint_angles)):
             target_arm_joint_angles[i] = np.clip(target_arm_joint_angles[i], self.min_angles[i], self.max_angles[i])
         
-        print(target_arm_joint_angles)
+        #print(target_arm_joint_angles)
         return target_arm_joint_angles
 
     def set_joint_angles(self, target_angles):
@@ -71,6 +80,8 @@ class Xarm6Real(gym.Env):
 
     def get_ee_position(self):
         ee_position_mm = self.arm.get_position()[1][:3]
+        offset_mm = [0,0,500]
+        # ee_position_mm = [a + b for a,b in zip(ee_position_mm,offset_mm)]
         ee_position_m = np.array([ee_position_mm[i] * 10 ** -3 for i in range(3)])
         return ee_position_m
 
@@ -83,15 +94,18 @@ class Xarm6Real(gym.Env):
         self.t0 = time.time()
         self.p0 = p1
         return speed
-    
+
     def _get_obs(self):
         return {
             'desired_goal': np.zeros(3),    # Example desired goal
             'achieved_goal': self.get_ee_position(),
             'observation': self.get_ee_position()
         }
+    
+    def set_ee_position(self,x,y,z):
+        self.arm.set_position(x,y,z)
 
-        
+    
 if __name__ == '__main__':
     try:
         arm = Xarm6Real()
@@ -100,9 +114,12 @@ if __name__ == '__main__':
         exit(10)
 
     arm.reset()
-    action = [ 5.96958212, -1.44234191, -1.59285435,  3.9586518,   2.03777744, -1.63519247]
-    arm.set_joint_angles(action)
+    arm.set_ee_position(340,-300,340)
+    time.sleep(10)
+    ee_pose = arm.get_ee_position()
+    goal_pose = np.array([0.34, -0.3, 0.34])
+    print(ee_pose)
+    print(np.linalg.norm(ee_pose - goal_pose))
 
-    
 
-    
+
