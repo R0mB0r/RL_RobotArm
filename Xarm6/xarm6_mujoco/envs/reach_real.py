@@ -7,7 +7,7 @@ from xarm6_mujoco.envs.xarm6_env_real import Xarm6Real
 class Xarm6ReachRealEnv(Xarm6Real):
     def __init__(
         self,
-        distance_threshold: float = 0.005,
+        distance_threshold: float = 0.02,
         max_episode_steps: int = 400,
         **kwargs: Any,
     ):
@@ -30,6 +30,7 @@ class Xarm6ReachRealEnv(Xarm6Real):
         terminated = bool(info["is_success"])
         truncated = self.compute_truncated(observation["achieved_goal"], self.goal, info)
         reward = self.compute_reward(observation["achieved_goal"], self.goal, info)
+        print("r ", reward)
 
         return observation, reward, terminated, truncated, info
 
@@ -46,6 +47,7 @@ class Xarm6ReachRealEnv(Xarm6Real):
 
     def _is_success(self, achieved_position: np.ndarray, desired_goal: np.ndarray) -> np.float32:
         distance = self.goal_distance(achieved_position, desired_goal)
+        print(distance)
         return (distance < self.distance_threshold).astype(np.float32)
 
     def compute_truncated(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict) -> bool:

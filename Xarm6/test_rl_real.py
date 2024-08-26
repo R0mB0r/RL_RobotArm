@@ -1,75 +1,50 @@
-import os
-import numpy as np
 import time
+
+import numpy as np
 import gymnasium as gym
+
 import xarm6_mujoco
 
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 
 
-
 def create_env(env_name):
     try:
-        env = gym.make(env_name)
-        print(f"Environnement {env_name} créé avec succès.")
-        return env
+        return gym.make(env_name)
     except Exception as e:
-        print(f"Erreur lors de la création de l'environnement: {e}")
-        raise
+        raise RuntimeError(f"Erreur lors de la création de l'environnement: {e}")
 
+def simulation(model, env, test_duration=500):
+    """Exécute un test final pour visualiser les performances de l'agent et afficher les récompenses."""
+    observations = env.reset()
+    states = None
+    episode_starts = np.array([True])
 
-# def simulation(model, env, test_duration=120):
-#     """Exécute un test final pour visualiser les performances de l'agent et sauvegarder les actions dans un fichier."""
-#     print(env.reset())
-#     observations = env.reset()
-#     states = None
-#     episode_starts = np.array([True])
+    rewards = np.zeros(test_duration)  # Pré-allouer la mémoire pour les récompenses
+    steps = np.arange(1, test_duration + 1)  # Pré-allouer les étapes
 
-#     t0 = time.time()
+    predict_fn = model.predict  # Référence pour éviter de chercher la méthode à chaque itération
+    step_fn = env.step  # Idem pour la méthode env.step
 
-#     while (time.time() - t0) < test_duration:
-#         actions, states = model.predict(
-#             observations,
-#             state=states,
-#             episode_start=episode_starts,
-#             deterministic=True,
-#         )
+    for step in range(test_duration):
+        actions, states = predict_fn(
+            observations,
+            state=states,
+            episode_start=episode_starts,
+            deterministic=True,
+        )
 
-#         print(actions)
+        observations, reward, done, info = step_fn(actions)
+        print("rr ", reward)
+        rewards[step] = reward[0]  # Stocker la récompense
 
-#         observations, _, _, _ = env.step(actions)
-
-#     env.close()
-
-
-def load_actions_from_file(action_file):
-    liste = []
-    with open(action_file, 'r') as file:
-        for line in file:
-            # Supprimer les crochets et autres caractères non numériques
-            cleaned_line = line.replace('[', '').replace(']', '').replace(',', '').strip()
-            # Transformer la ligne en liste de flottants
-            if cleaned_line:
-                values = np.array([float(x) for x in cleaned_line.split()])
-                liste.append(values)
-    return liste
-
-def simulation(env, action_file):
-    """Run a final test to visualize the agent's performance."""
-    obs = env.reset()
-    actions_list = load_actions_from_file(action_file)
-    action_index = 0
-
-    while action_index < len(actions_list):
-        actions = actions_list[action_index]
-        print(actions)
-        action_index += 1
-        obs, _, _, _ = env.step(actions)
+        time.sleep(0.2)
 
     env.close()
 
 if __name__ == "__main__":
+    print('hello')
     env_name = 'Xarm6ReachRealEnv'
     
     # Créer l'environnement
@@ -82,7 +57,4 @@ if __name__ == "__main__":
     model = PPO.load("Xarm6/trainings/ppo-Xarm6ReachEnv.zip")
     
     # Exécuter la simulation
-    # simulation(model, sim_env)
-
-    action_file = "Xarm6/actions.txt"
-    simulation(sim_env,action_file)
+    simulation(model, sim_env)
