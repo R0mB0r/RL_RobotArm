@@ -85,7 +85,7 @@ def simulation(model, env, test_duration=120, output_file="actions.txt"):
             deterministic=True,
         )
         # Write actions to the file
-        observations, _, _, _ = env.step(actions)
+        observations, reward, _, _ = env.step(actions)
 
     env.close()
 
