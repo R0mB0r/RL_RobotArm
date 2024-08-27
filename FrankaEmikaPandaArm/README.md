@@ -15,7 +15,9 @@ To run the test:
 python3 panda_action_sampler.py 
 ```
 
-<img src="./pictures/panda_test.gif" alt="" width="230"/>
+<div>
+|<img src="./pictures/panda_test.gif" alt="" width="230"/>|
+</div>
 
 ## Training, Evaluation and Simulation
 
@@ -39,5 +41,7 @@ This model can also be loaded in this script to evaluate the trained agent and t
 ```bash
 python3 ppo_panda_training_pipeline.py  --show_spaces --training --total_timesteps 2000000 --evaluate --simulation 
 ```
+<div>
 <img src="./pictures/panda_simu_trained.gif" alt="" width="230"/>
+</div>
 
