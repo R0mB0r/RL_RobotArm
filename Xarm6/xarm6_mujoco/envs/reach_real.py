@@ -7,7 +7,7 @@ from xarm6_mujoco.envs.xarm6_env_real import Xarm6Real
 class Xarm6ReachRealEnv(Xarm6Real):
     def __init__(
         self,
-        distance_threshold: float = 0.02,
+        distance_threshold: float = 0.01,
         max_episode_steps: int = 400,
         **kwargs: Any,
     ):
@@ -47,8 +47,12 @@ class Xarm6ReachRealEnv(Xarm6Real):
 
     def _is_success(self, achieved_position: np.ndarray, desired_goal: np.ndarray) -> np.float32:
         distance = self.goal_distance(achieved_position, desired_goal)
-        print(distance)
+        # Ouvrir le fichier en mode ajout (append) pour ne pas écraser les données existantes
+        with open("distances_real.txt", "a") as file:
+            file.write(f"{distance}\n")
+        # Vérifier si la distance est inférieure au seuil
         return (distance < self.distance_threshold).astype(np.float32)
+
 
     def compute_truncated(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict) -> bool:
         return False
