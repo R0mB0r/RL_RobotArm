@@ -15,6 +15,7 @@ To run the test:
 python3 panda_action_sampler.py 
 ```
 
+<img src="./pictures/panda_test.gif">
 
 ## Training, Evaluation and Simulation
 
@@ -22,14 +23,18 @@ In the script `ppo_panda_training_pipeline.py`, we train an agent in the `Reach`
 
 This model can also be loaded in this script to evaluate the trained agent and to perform a 3D simulation of the agent executing the `Reach` task.
 
+<img src="./pictures/panda_simu_trained.gif>
+
+
 ### Explanation of Script Arguments:
---show_spaces: Displays information about the observation and action spaces.
---training: Trains the agent in the environment.
---total_timesteps: Sets the total number of training timesteps (default: 1,000,000).
---evaluate: Evaluates the trained agent in the environment.
---simulation: Performs a final test with rendering after training.
---checkpoint_freq: Specifies the frequency of saving checkpoints (in timesteps) (default: 100,000).
---log_dir: Specifies the directory where logs and models will be saved (default: Trainings).
+    
+    --show_spaces: Displays information about the observation and action spaces.
+    --training: Trains the agent in the environment.
+    --total_timesteps: Sets the total number of training timesteps (default: 1,000,000).
+    --evaluate: Evaluates the trained agent in the environment.
+    --simulation: Performs a final test with rendering after training.
+    --checkpoint_freq: Specifies the frequency of saving checkpoints (in timesteps) (default: 100,000).
+    --log_dir: Specifies the directory where logs and models will be saved (default: Trainings).
 
 ### Exemple Command to Execute the Script: 
 
