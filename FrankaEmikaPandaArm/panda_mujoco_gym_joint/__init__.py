@@ -4,8 +4,8 @@ from gymnasium.envs.registration import register
 
 ENV_IDS = []
 
-for task in ["Push","Reach", "Slide", "PickAndPlace"]:
-    env_id = f"Panda{task}-v3"
+for task in ["Reach"]:
+    env_id = f"Panda{task}"
 
     register(
         id=env_id,

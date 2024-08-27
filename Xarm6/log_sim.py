@@ -6,7 +6,7 @@ with open("Xarm6/distances.txt", "r") as file:
     distances = [float(line.strip()) for line in file]
 
 # Conserver uniquement les 1000 dernières valeurs, ou toutes si moins de 1000
-num_values_to_show = 1000
+num_values_to_show = 5000
 if len(distances) > num_values_to_show:
     distances = distances[-num_values_to_show:]
 
