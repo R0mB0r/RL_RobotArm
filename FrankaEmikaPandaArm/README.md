@@ -15,15 +15,13 @@ To run the test:
 python3 panda_action_sampler.py 
 ```
 
-<img src="./pictures/panda_test.gif">
+<img src="./pictures/panda_test.gif" alt="" width="230"/>
 
 ## Training, Evaluation and Simulation
 
 In the script `ppo_panda_training_pipeline.py`, we train an agent in the `Reach` environment using the PPO algorithm developed by the [stable-baselines3](https://github.com/DLR-RM/stable-baselines3) library. After training, the model is saved in the `Trainings` directory. The model is composed of two files: ppo-pandareach.zip and vec_normalize.pkl.
 
 This model can also be loaded in this script to evaluate the trained agent and to perform a 3D simulation of the agent executing the `Reach` task.
-
-<img src="./pictures/panda_simu_trained.gif>
 
 
 ### Explanation of Script Arguments:
@@ -41,4 +39,5 @@ This model can also be loaded in this script to evaluate the trained agent and t
 ```bash
 python3 ppo_panda_training_pipeline.py  --show_spaces --training --total_timesteps 2000000 --evaluate --simulation 
 ```
+<img src="./pictures/panda_simu_trained.gif" alt="" width="230"/>
 
