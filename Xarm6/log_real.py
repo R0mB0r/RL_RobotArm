@@ -18,7 +18,7 @@ fig = go.Figure()
 
 # Ajouter les données au graphique
 fig.add_trace(go.Scatter(x=steps, y=distances, mode='lines+markers', name='Distance'))
-fig.add_trace(go.Scatter(x=steps, y=[0.02] * len(steps), mode='lines', name='Seuil de réussite', line=dict(color='red', dash='dash')))
+fig.add_trace(go.Scatter(x=steps, y=[0.01] * len(steps), mode='lines', name='Seuil de réussite', line=dict(color='red', dash='dash')))
 
 # Ajouter des titres et des labels
 fig.update_layout(
