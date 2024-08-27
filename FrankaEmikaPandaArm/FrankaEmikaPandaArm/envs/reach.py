@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from typing import Any, SupportsFloat
-from panda_mujoco_gym_joint.envs.panda_env import Panda
+from FrankaEmikaPandaArm.envs.panda_env import Panda
 
 import pdb
 

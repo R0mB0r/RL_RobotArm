@@ -1,6 +1,6 @@
 import time
 import gymnasium as gym
-import panda_mujoco_gym_joint
+import FrankaEmikaPandaArm
 
 # Constants
 ENV_NAME = "PandaReach"

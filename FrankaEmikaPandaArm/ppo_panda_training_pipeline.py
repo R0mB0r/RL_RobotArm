@@ -3,7 +3,7 @@ import numpy as np
 import time
 import argparse
 import gymnasium as gym
-import panda_mujoco_gym_joint
+import FrankaEmikaPandaArm
 
 from stable_baselines3 import PPO
 from stable_baselines3.common.evaluation import evaluate_policy
