@@ -17,11 +17,11 @@ python3 panda_action_sampler.py
 
 <div align="center">
 
-`untrained model simulation`|`untrained model log: distance as a function of steps`|
+`Untrained model simulation` | `Untrained model log: distance as a function of steps`|
 |:------------------------:|:------------------------:|
-<img src="/pictures/FrankaEmikaPandaArm/panda_test.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_untrained.png>" alt="" width="230"/>| 
+<img src="/pictures/FrankaEmikaPandaArm/panda_simu_test.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_untrained.png" alt="" width="230"/>| 
 
-</div>
+</div> 
 
 ## Training, Evaluation and Simulation
 
@@ -47,7 +47,8 @@ python3 ppo_panda_training_pipeline.py  --show_spaces --training --total_timeste
 ```
 <div align="center">
 
-`trained model simulation`|`trained model log: distance as a function of steps`|  
+`Trained model simulation`|`Trained model log: distance as a function of steps`|
+|:------------------------:|:------------------------:|  
 <img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_trained.png" alt="" width="230"/>
 
 </div>
