@@ -15,7 +15,13 @@ To run the test:
 python3 panda_action_sampler.py 
 ```
 
-<img src="/pictures/panda_test.gif" alt="" width="230"/>
+<div align="center">
+
+`untrained model simulation`|`untrained model log: distance as a function of steps`|
+|:------------------------:|:------------------------:|
+<img src="/pictures/FrankaEmikaPandaArm/panda_test.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_untrained.png>" alt="" width="230"/>| 
+
+</div>
 
 ## Training, Evaluation and Simulation
 
@@ -39,5 +45,10 @@ This model can also be loaded in this script to evaluate the trained agent and t
 ```bash
 python3 ppo_panda_training_pipeline.py  --show_spaces --training --total_timesteps 2000000 --evaluate --simulation 
 ```
-<img src="/pictures/panda_simu_trained.gif" alt="" width="230"/>
+<div align="center">
+
+`trained model simulation`|`trained model log: distance as a function of steps`|  
+<img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_trained.png" alt="" width="230"/>
+
+</div>
 

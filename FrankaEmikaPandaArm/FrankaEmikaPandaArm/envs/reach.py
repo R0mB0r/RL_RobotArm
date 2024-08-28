@@ -11,7 +11,7 @@ MODEL_XML_PATH = os.path.join(os.path.dirname(__file__), "../assets/", "reach.xm
 class PandaReachEnv(Panda):
     def __init__(
         self,
-        distance_threshold: float = 0.05,
+        distance_threshold: float = 0.01,
         goal_xy_range: float = 0.3,
         goal_x_offset: float = 0.0,
         goal_z_range: float = 0.3,
@@ -59,7 +59,7 @@ class PandaReachEnv(Panda):
         self.nv = self.model.nv  # Number of velocities
         self.ctrl_range = self.model.actuator_ctrlrange  # Control range for actuators
 
-        self.training = True
+        self.training = False
 
     def _initialize_simulation(self) -> None:
         """
@@ -206,7 +206,7 @@ class PandaReachEnv(Panda):
         return goal  # Return a predefined goal position
 
 
-    def goal_distance(self, goal_a: np.ndarray, goal_b: np.ndarray) -> SupportsFloat:
+    def goal_distance(self, goal_a: np.ndarray, goal_b: np.ndarray, log = True) -> SupportsFloat:
         """
         Compute the distance between two goal positions.
 
@@ -218,5 +218,14 @@ class PandaReachEnv(Panda):
         - SupportsFloat: Euclidean distance between the two goals.
         """
         assert goal_a.shape == goal_b.shape
-        return np.linalg.norm(goal_a - goal_b)
+        distance = np.linalg.norm(goal_a - goal_b, axis=-1)
+        
+    
+        if log:
+            log_dir = '/home/yoshidalab/Documents/Romain/RL_RobotArm/FrankaEmikaPandaArm/Log'
+            if not os.path.exists(log_dir):
+                os.makedirs(log_dir)
+            with open(os.path.join(log_dir, "distances.txt"), "a") as file:
+                file.write(f"{distance}\n")
 
+        return distance

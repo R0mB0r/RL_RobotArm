@@ -9,7 +9,7 @@ for task in ["Reach"]:
 
     register(
         id=env_id,
-        entry_point=f"panda_mujoco_gym_joint.envs:Panda{task}Env",
+        entry_point=f"FrankaEmikaPandaArm.envs:Panda{task}Env",
         max_episode_steps=100,
     )
 

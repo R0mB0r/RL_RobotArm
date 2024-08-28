@@ -26,6 +26,6 @@ The following essential libraries, along with their corresponding versions, are 
 
 `FrankaEmikaPanda` | `Xarm6` |
 |:------------------------:|:------------------------:|
-<img src="./pictures/frankaEmika PandaArm.png" alt="" width="230"/> | <img src="./pictures/Xarm6.png" alt="" width="230"/> |
+<img src="./pictures/FrankaEmikaPandaArm/frankaEmikaPandaArm.png" alt="" width="230"/> | <img src="./pictures/Xarm6/Xarm6.png" alt="" width="230"/> |
 
 </div>
