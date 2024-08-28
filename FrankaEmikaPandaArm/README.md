@@ -19,7 +19,7 @@ python3 panda_action_sampler.py
 
 `Untrained model simulation` | `Untrained model log: distance as a function of steps`|
 |:------------------------:|:------------------------:|
-<img src="/pictures/FrankaEmikaPandaArm/panda_simu_test.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_untrained.png" alt="" width="230"/>| 
+<img src="/pictures/FrankaEmikaPandaArm/panda_simu_test.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_untrained.png" alt="" width=""/>| 
 
 </div> 
 
@@ -49,7 +49,7 @@ python3 ppo_panda_training_pipeline.py  --show_spaces --training --total_timeste
 
 `Trained model simulation`|`Trained model log: distance as a function of steps`|
 |:------------------------:|:------------------------:|  
-<img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_trained.png" alt="" width="230"/>
+<img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_trained.png" alt="" width=""/>
 
 </div>
 
