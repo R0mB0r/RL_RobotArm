@@ -19,7 +19,7 @@ python3 panda_action_sampler.py
 
 `Untrained model simulation` | `Untrained model log: distance as a function of steps`|
 |:------------------------:|:------------------------:|
-<img src="/pictures/FrankaEmikaPandaArm/panda_simu_test.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_untrained.png" alt="" width=""/>| 
+<img src="/Pictures/FrankaEmikaPandaArm/panda_simu_test.gif" alt="" width="230"/> | <img src="/Pictures/FrankaEmikaPandaArm/panda_log_untrained.png" alt="" width=""/>| 
 
 </div> 
 
@@ -49,7 +49,7 @@ python3 ppo_panda_training_pipeline.py  --show_spaces --training --total_timeste
 
 `Trained model simulation`|`Trained model log: distance as a function of steps`|
 |:------------------------:|:------------------------:|  
-<img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained.gif" alt="" width="230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_trained.png" alt="" width=""/>
+<img src="/Pictures/FrankaEmikaPandaArm/panda_simu_trained.gif" alt="" width="230"/> | <img src="/Pictures/FrankaEmikaPandaArm/panda_log_trained.png" alt="" width=""/>
 
 </div>
 
@@ -63,7 +63,7 @@ These solutions are implemented in the code through the boolean variables `self.
 
 `self.success_reset = False, self.fix=True`| mean_reward = -1.16 +/- 0.83| 
 |:------------------------:|:------------------------:|
-<img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained_no_success_reset_fix.gif" width = "230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_trained_no_success_reset_fix.png"/>
+<img src="/Pictures/FrankaEmikaPandaArm/panda_simu_trained_no_success_reset_fix.gif" width = "230"/> | <img src="/Pictures/FrankaEmikaPandaArm/panda_log_trained_no_success_reset_fix.png"/>
 
 </div>
 
@@ -73,7 +73,7 @@ These solutions are implemented in the code through the boolean variables `self.
 
 `self.success_reset = False, self.fix=False`| mean_reward = -1.30 +/- 0.45|
 |:------------------------:|:------------------------:|
-<img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained_no_success_reset.gif" width = "230"> | <img src="/pictures/FrankaEmikaPandaArm/pand_log_trained_no_success_reset.png"/>
+<img src="/Pictures/FrankaEmikaPandaArm/panda_simu_trained_no_success_reset.gif" width = "230"> | <img src="/Pictures/FrankaEmikaPandaArm/pand_log_trained_no_success_reset.png"/>
 
 
 </div>
