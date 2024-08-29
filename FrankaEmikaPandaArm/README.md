@@ -61,8 +61,8 @@ These solutions are implemented in the code through the boolean variables `self.
 
 <div align="center">
 
-``self.success_reset = False, self.fix=True`|
-|:------------------------:|
+`self.success_reset = False, self.fix=True`|
+|:------------------------:|:------------------------:|
 <img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained_no_success_reset_fix.gif" width = "230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_trained_no_success_reset_fix.png"/>
 
 </div>
@@ -72,7 +72,7 @@ mean_reward = -1.16 +/- 0.83|
 <div align="center">
 
 `self.success_reset = False, self.fix=False`|
-|:------------------------:|
+|:------------------------:|:------------------------:|
 <img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained_no_success_reset.gif" width = "230"> | <img src="/pictures/FrankaEmikaPandaArm/pand_log_trained_no_success_reset.png"/>
 
 
