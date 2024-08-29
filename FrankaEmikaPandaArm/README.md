@@ -53,3 +53,29 @@ python3 ppo_panda_training_pipeline.py  --show_spaces --training --total_timeste
 
 </div>
 
+### Model improvement suggestions : no success reset
+
+As you can see above, the robot resets its position each time it successfully reaches the target. However, this behavior is not desirable in real-life scenarios; when a robotic arm is instructed to go to a point, we expect it to stay there. To eliminate this success reset, there are two effective strategies: either tell the robot that reaching the point is not a terminal condition, or fix its position by performing no action when it reaches the target.
+
+These solutions are implemented in the code through the boolean variables `self.success_reset = False` and `self.fix` in the `reach.py` script.
+
+<div align="center">
+
+``self.success_reset = False, self.fix=True`|
+|:------------------------:|:------------------------:|
+<img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained_no_success_reset_fix.gif" width = "230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_trained_no_success_reset_fix.png"/>
+|:------------------------:|
+mean_reward = -1.16 +/- 0.83|
+
+</div>
+
+<div align="center">
+
+`self.success_reset = False, self.fix=False`|
+|:------------------------:|:------------------------:|
+<img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained_no_success_reset.gif" width = "230"> | <img src="/pictures/FrankaEmikaPandaArm/pand_log_trained_no_success_reset.png"/>
+|:------------------------:|
+mean_reward = -1.30 +/- 0.45|
+
+</div>
+

@@ -59,7 +59,8 @@ class PandaReachEnv(Panda):
         self.nv = self.model.nv  # Number of velocities
         self.ctrl_range = self.model.actuator_ctrlrange  # Control range for actuators
 
-        self.training = False
+        self.success_reset = False
+        self.fix = False
 
     def _initialize_simulation(self) -> None:
         """
@@ -113,15 +114,21 @@ class PandaReachEnv(Panda):
         obs = self._get_obs().copy()
         info = {"is_success": self._is_success(obs["achieved_goal"], self.goal)}
         truncated = self.compute_truncated(obs["achieved_goal"], self.goal, info)
+        
+        
+        if not self.success_reset:
+            terminated = False
         terminated = bool(info["is_success"])
         
         if terminated:
             self.is_reached = True
 
-        if self.is_reached and not self.training:
+        if not self.success_reset:
+            terminated = False
+
+        if self.is_reached and self.fix:
             obs = self._get_obs().copy()
             info = {}
-            terminated = False
             reward = 0.0
 
         else:
@@ -134,6 +141,7 @@ class PandaReachEnv(Panda):
                 self.render()
 
             reward = self.compute_reward(obs["achieved_goal"], self.goal, info)
+            
 
         return obs, reward, terminated, truncated, info
 
@@ -167,19 +175,27 @@ class PandaReachEnv(Panda):
             "desired_goal": self.goal,
         }
 
-    def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: dict) -> SupportsFloat:
+    def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, log = True) -> SupportsFloat:
         """
         Calculate the reward for the current state.
 
         Parameters:
         - achieved_goal (np.ndarray): Position of the achieved goal.
         - desired_goal (np.ndarray): Target goal position.
-        - info (dict): Additional information.
+        - log (bool): Whether to log the distance to a file.
 
         Returns:
         - SupportsFloat: The computed reward based on distance to the goal.
         """
         d = self.goal_distance(achieved_goal, desired_goal)
+
+        if log :
+            log_dir = '/home/yoshidalab/Documents/Romain/RL_RobotArm/FrankaEmikaPandaArm/Log'
+            if not os.path.exists(log_dir):
+                os.makedirs(log_dir)
+            with open(os.path.join(log_dir, "distances.txt"), "a") as file:
+                file.write(f"{d}\n")
+
         return -d
 
     def _render_callback(self) -> None:
@@ -206,7 +222,7 @@ class PandaReachEnv(Panda):
         return goal  # Return a predefined goal position
 
 
-    def goal_distance(self, goal_a: np.ndarray, goal_b: np.ndarray, log = True) -> SupportsFloat:
+    def goal_distance(self, goal_a: np.ndarray, goal_b: np.ndarray) -> SupportsFloat:
         """
         Compute the distance between two goal positions.
 
@@ -219,13 +235,5 @@ class PandaReachEnv(Panda):
         """
         assert goal_a.shape == goal_b.shape
         distance = np.linalg.norm(goal_a - goal_b, axis=-1)
-        
-    
-        if log:
-            log_dir = '/home/yoshidalab/Documents/Romain/RL_RobotArm/FrankaEmikaPandaArm/Log'
-            if not os.path.exists(log_dir):
-                os.makedirs(log_dir)
-            with open(os.path.join(log_dir, "distances.txt"), "a") as file:
-                file.write(f"{distance}\n")
 
         return distance

@@ -6,7 +6,7 @@ with open("FrankaEmikaPandaArm/Log/distances.txt", "r") as file:
     distances = [float(line.strip()) for line in file]
 
 # Conserver uniquement les 5000 dernières valeurs, ou toutes si moins de 1000
-num_values_to_show = 5000
+num_values_to_show = 1000
 if len(distances) > num_values_to_show:
     distances = distances[-num_values_to_show:]
 
@@ -18,7 +18,7 @@ fig = go.Figure()
 
 # Ajouter les données au graphique
 fig.add_trace(go.Scatter(x=steps, y=distances, mode='lines+markers', name='Distance'))
-fig.add_trace(go.Scatter(x=steps, y=[0.05] * len(steps), mode='lines', name='Threshold', line=dict(color='red', dash='dash')))
+fig.add_trace(go.Scatter(x=steps, y=[0.01] * len(steps), mode='lines', name='Threshold', line=dict(color='red', dash='dash')))
 
 # Ajouter des titres et des labels
 fig.update_layout(
