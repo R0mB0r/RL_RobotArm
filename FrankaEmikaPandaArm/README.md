@@ -61,23 +61,22 @@ These solutions are implemented in the code through the boolean variables `self.
 
 <div align="center">
 
-`self.success_reset = False, self.fix=True`| ` ` |
+`self.success_reset = False, self.fix=True`| mean_reward = -1.16 +/- 0.83| 
 |:------------------------:|:------------------------:|
 <img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained_no_success_reset_fix.gif" width = "230"/> | <img src="/pictures/FrankaEmikaPandaArm/panda_log_trained_no_success_reset_fix.png"/>
 
 </div>
 
-mean_reward = -1.16 +/- 0.83|
+
 
 <div align="center">
 
-`self.success_reset = False, self.fix=False`| ` `|
+`self.success_reset = False, self.fix=False`| mean_reward = -1.30 +/- 0.45|
 |:------------------------:|:------------------------:|
 <img src="/pictures/FrankaEmikaPandaArm/panda_simu_trained_no_success_reset.gif" width = "230"> | <img src="/pictures/FrankaEmikaPandaArm/pand_log_trained_no_success_reset.png"/>
 
 
 </div>
 
-mean_reward = -1.30 +/- 0.45|
 
 With this robot and environment, there is not a significant difference between these solutions, but it could be interesting to try them in another environment. 
