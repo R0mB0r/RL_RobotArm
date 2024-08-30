@@ -31,7 +31,7 @@ def parse_args():
                         help="Perform a simulation with rendering after a training.")
     parser.add_argument("--checkpoint_freq", type=int, default=1_000_000,
                         help="Frequency of saving checkpoints (in timesteps).")
-    parser.add_argument("--log_dir", type=str, default="/home/yoshidalab/Documents/Romain/RL_RobotArm/Xarm6/Trainings",
+    parser.add_argument("--log_dir", type=str, default="Trainings/Training_Reach_2M_goal_fix_ee_fix",
                         help="Directory where the logs and models will be saved.")
     return parser.parse_args()
 
@@ -81,7 +81,7 @@ def evaluate_agent(model, env):
     mean_reward, std_reward = evaluate_policy(model, env, n_eval_episodes=10, deterministic=True, render=True)
     print(f"mean_reward={mean_reward:.2f} +/- {std_reward:.2f}")
 
-def simulation(model, env, num_steps = 100, sleep_duration=0.05):
+def simulation(model, env, num_steps = 800, sleep_duration=0.05):
     """Run a final test to visualize the agent's performance."""
     observations = env.reset()
     states = None
@@ -114,8 +114,8 @@ def simulation(model, env, num_steps = 100, sleep_duration=0.05):
 def load_env_and_model(env_name, log_dir):
     """Load the environment and the trained model."""
     eval_env = DummyVecEnv([lambda: create_env(env_name, render_mode="human")])
-    eval_env = VecNormalize.load(os.path.join(log_dir, f"vec_normalize-Xarm6ReachEnv.pkl"), eval_env)
-    model = PPO.load(os.path.join(log_dir, f"ppo-Xarm6ReachEnv.zip"))
+    eval_env = VecNormalize.load(os.path.join(log_dir, f"vec_normalize-{env_name}.pkl"), eval_env)
+    model = PPO.load(os.path.join(log_dir, f"ppo-{env_name}.zip"))
     return model, eval_env
 
 

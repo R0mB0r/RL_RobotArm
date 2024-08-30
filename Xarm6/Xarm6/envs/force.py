@@ -14,7 +14,7 @@ def get_force_sensor_data(data) -> np.ndarray:
 MODEL_XML_PATH = os.path.join(os.path.dirname(__file__), "../assets/", "force.xml")
 
 class Xarm6ForceEnv(Xarm6):
-    def __init__(self, distance_threshold: float = 0.02, goal_force=np.array([0, 0, 40]), **kwargs: Any):
+    def __init__(self, distance_threshold: float = 0.02, goal_force=np.array([0, 0, -40]), **kwargs: Any):
         self.model_path = MODEL_XML_PATH
         self.distance_threshold = distance_threshold
         self.goal_force = goal_force

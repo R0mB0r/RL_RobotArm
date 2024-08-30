@@ -57,7 +57,7 @@ class Xarm6ReachEnv(Xarm6):
         self.nv = self.model.nv  # Number of velocities
         self.ctrl_range = self.model.actuator_ctrlrange  # Control range for actuators
 
-        self.success_reset = False
+        self.success_reset = True
         self.fix = True
 
     
@@ -117,7 +117,7 @@ class Xarm6ReachEnv(Xarm6):
         terminated = bool(info["is_success"])
         
         if terminated:
-            self.is_reached = True
+            self.is_reached = False
 
 
         if not self.success_reset:
