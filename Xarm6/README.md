@@ -89,6 +89,7 @@ For the `Reach` task:
 <div align="center">
 
 `Trained Force model simulation`| `Trained Force model log: Force, Distance, Speed and Rotationnal speed as function of timestep`|
+|:------------------------:|:------------------------:| 
 <img src="/Pictures/Xarm6/xarm6_sim_Force_trained.gif"/>| <img src="/Pictures/Xarm6/xarm6_sim_Force_log_trained.png"/>
 
 </div>
@@ -126,7 +127,7 @@ The script real_world_test.py allows running a model trained in simulation on th
 
 `Trained Reach model real log: distance as a function of steps`|
  |:------------------------:|
- <img src="/Pictures/Xarm6/xarm6_real_Reach_log_trained.png" alt="" width="230"/>|
+ <img src="/Pictures/Xarm6/xarm6_real_Reach_log_trained.png" alt="" width=""/>|
 
 </div>
 
