@@ -31,8 +31,6 @@ class Xarm6ReachRealEnv(Xarm6Real):
         truncated = self.compute_truncated(observation["achieved_goal"], self.goal, info)
         reward = self.compute_reward(observation["achieved_goal"], self.goal, info)
 
-        print(terminated)
-
         return observation, reward, terminated, truncated, info
 
     

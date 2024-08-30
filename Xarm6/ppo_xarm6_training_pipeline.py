@@ -31,7 +31,7 @@ def parse_args():
                         help="Perform a simulation with rendering after a training.")
     parser.add_argument("--checkpoint_freq", type=int, default=1_000_000,
                         help="Frequency of saving checkpoints (in timesteps).")
-    parser.add_argument("--log_dir", type=str, default="/home/yoshidalab/Documents/Romain/RL_RobotArm/Xarm6/Trainings",
+    parser.add_argument("--log_dir", type=str, default="Xarm6/Trainings/Training_2M_goal_fix_ee_fix",
                         help="Directory where the logs and models will be saved.")
     return parser.parse_args()
 

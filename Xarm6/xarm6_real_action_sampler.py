@@ -9,7 +9,7 @@ from Xarm6.envs.reach_real import Xarm6ReachRealEnv
 ENV_NAME = "Xarm6ReachRealEnv"
 RENDER_MODE = "human"
 NUM_STEPS = 1000
-SLEEP_DURATION = 0.05
+SLEEP_DURATION = 0.2
 
 test_duration = NUM_STEPS*SLEEP_DURATION
 print(f"Running the simulation for {test_duration} seconds...")
