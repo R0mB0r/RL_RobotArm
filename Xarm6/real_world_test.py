@@ -50,10 +50,10 @@ if __name__ == "__main__":
     test_env = DummyVecEnv([lambda: create_env(env_name)])
 
     # Load the environment normalization
-    test_env = VecNormalize.load("Xarm6/Trainings/Training_2M_goal_fix_ee_fix/vec_normalize-Xarm6ReachEnv.pkl", test_env)
+    test_env = VecNormalize.load("Xarm6/Trainings/Training_Reach_2M_goal_fix_ee_fix/vec_normalize-Xarm6ReachEnv.pkl", test_env)
 
     # Load the trained model
-    model = PPO.load("Xarm6/Trainings/Training_2M_goal_fix_ee_fix/ppo-Xarm6ReachEnv.zip")
+    model = PPO.load("Xarm6/Trainings/Training_Reach_2M_goal_fix_ee_fix/ppo-Xarm6ReachEnv.zip")
 
     # Run the test
     test(model, test_env)
