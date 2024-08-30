@@ -3,7 +3,7 @@ import gymnasium as gym
 import Xarm6
 
 # Constants
-ENV_NAME = "Xarm6ReachEnv"
+ENV_NAME = "Xarm6ForceEnv"
 RENDER_MODE = "human"
 NUM_STEPS = 1000
 SLEEP_DURATION = 0.05

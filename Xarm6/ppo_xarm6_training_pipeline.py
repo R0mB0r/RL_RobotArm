@@ -81,7 +81,7 @@ def evaluate_agent(model, env):
     mean_reward, std_reward = evaluate_policy(model, env, n_eval_episodes=10, deterministic=True, render=True)
     print(f"mean_reward={mean_reward:.2f} +/- {std_reward:.2f}")
 
-def simulation(model, env, num_steps = 10000, sleep_duration=0.05):
+def simulation(model, env, num_steps = 100, sleep_duration=0.05):
     """Run a final test to visualize the agent's performance."""
     observations = env.reset()
     states = None
@@ -105,7 +105,9 @@ def simulation(model, env, num_steps = 10000, sleep_duration=0.05):
         )
         
         observations, reward, done, info = step_fn(actions)
+        env.render()
       
+        time.sleep(sleep_duration)
 
     env.close()
 

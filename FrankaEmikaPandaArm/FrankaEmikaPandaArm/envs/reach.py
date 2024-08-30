@@ -60,7 +60,7 @@ class PandaReachEnv(Panda):
         self.ctrl_range = self.model.actuator_ctrlrange  # Control range for actuators
 
         self.success_reset = False
-        self.fix = False
+        self.fix = True
 
     def _initialize_simulation(self) -> None:
         """
@@ -114,10 +114,6 @@ class PandaReachEnv(Panda):
         obs = self._get_obs().copy()
         info = {"is_success": self._is_success(obs["achieved_goal"], self.goal)}
         truncated = self.compute_truncated(obs["achieved_goal"], self.goal, info)
-        
-        
-        if not self.success_reset:
-            terminated = False
         terminated = bool(info["is_success"])
         
         if terminated:
@@ -125,7 +121,8 @@ class PandaReachEnv(Panda):
 
         if not self.success_reset:
             terminated = False
-
+        
+        
         if self.is_reached and self.fix:
             obs = self._get_obs().copy()
             info = {}

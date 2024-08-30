@@ -1,6 +1,6 @@
 # Franka Emika Panda Arm
 
-Development of a 3D model in the MuJoCo simulation software for the Franka Emika Panda robot, where the input is the angular position of the actuators. This robot will be controlled using the PPO reinforcement learning algorithm from the [stable-baselines3](https://github.com/DLR-RM/stable-baselines3) library. 
+Development of a 3D model in the MuJoCo simulation software for the Franka Emika Panda robot, where the input is the angular position of the actuators. This robot will be trained using the PPO reinforcement learning algorithm from the [stable-baselines3](https://github.com/DLR-RM/stable-baselines3) library. 
 
 In this project, our goal is to train the robot to perform the `Reach` task, which involves reaching a small green box that is randomly generated within the simulation space.
 

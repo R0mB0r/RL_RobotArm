@@ -110,13 +110,24 @@ class Xarm6(MujocoRobotEnv):
         Returns:
         - bool: True if the simulation was successfully reset.
         """
-
-        self.data.time = 0
-        self.data.qvel[:] = 0
-        if self.model.na != 0:
-            self.data.act[:] = 0
-        self.set_joint_neutral()
-        self._mujoco.mj_forward(self.model, self.data)
+        if self.is_reached:
+            self.data.time = 0
+            self.data.qvel[:] = 0
+            if self.model.na != 0:
+                self.data.act[:] = 0
+            joint_angles = np.array([self.get_joint_angle(i) for i in range(6)])
+            joint_velocities = np.array([0.0] * 6)
+            self.set_joint_angles(joint_angles)
+            self.set_joint_velocities(joint_velocities)
+            self._mujoco.mj_forward(self.model, self.data)
+        
+        else:
+            self.data.time = 0
+            self.data.qvel[:] = 0
+            if self.model.na != 0:
+                self.data.act[:] = 0
+            self.set_joint_neutral()
+            self._mujoco.mj_forward(self.model, self.data)
         return True
     
     def set_joint_neutral(self) -> None:
@@ -135,6 +146,11 @@ class Xarm6(MujocoRobotEnv):
     def set_joint_angles(self, target_angles: np.ndarray) -> None:
         for name, value in zip(self.arm_joint_names, target_angles[:6]):
             self._utils.set_joint_qpos(self.model, self.data, name, value)
+        self._mujoco.mj_forward(self.model, self.data)
+
+    def set_joint_velocities(self, velocities: np.ndarray) -> None:
+        for name, value in zip(self.arm_joint_names, velocities[:6]):
+            self._utils.set_joint_qvel(self.model, self.data, name, value)
         self._mujoco.mj_forward(self.model, self.data)
 
     def get_ee_position(self) -> np.ndarray:

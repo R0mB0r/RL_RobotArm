@@ -1,5 +1,5 @@
 <mujoco model="xarm6 scene">
-    <include file="xarm6.xml"/>
+    <include file="xarm6_no_gripper.xml"/>
 
     <statistic center="0.2 0 0.4" extent=".65"/>
     

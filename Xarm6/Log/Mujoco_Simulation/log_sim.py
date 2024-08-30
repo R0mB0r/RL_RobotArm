@@ -1,34 +1,35 @@
 import numpy as np
 import plotly.graph_objects as go
 
-# Lire les valeurs depuis le fichier texte
+# Read values from the text file
 with open("Xarm6/Log/Mujoco_Simulation/distances_sim.txt", "r") as file:
     distances = [float(line.strip()) for line in file]
 
-# Conserver uniquement les 1000 dernières valeurs, ou toutes si moins de 1000
+# Keep only the last 1000 values, or all if there are fewer than 1000
 num_values_to_show = 5000
 if len(distances) > num_values_to_show:
     distances = distances[-num_values_to_show:]
 
-# Créer une liste d'étapes en fonction du nombre de valeurs à afficher
+# Create a list of steps based on the number of values to display
 steps = np.arange(len(distances))
 
-# Créer le graphique avec Plotly
+# Create the plot with Plotly
 fig = go.Figure()
 
-# Ajouter les données au graphique
+# Add data to the plot
 fig.add_trace(go.Scatter(x=steps, y=distances, mode='lines+markers', name='Distance'))
-fig.add_trace(go.Scatter(x=steps, y=[0.01] * len(steps), mode='lines', name='Seuil de réussite', line=dict(color='red', dash='dash')))
+fig.add_trace(go.Scatter(x=steps, y=[0.01] * len(steps), mode='lines', name='Threshold', line=dict(color='red', dash='dash')))
 
-# Ajouter des titres et des labels
+# Add titles and labels
 fig.update_layout(
-    title='Distance vs Étape',
-    xaxis_title='Étape',
+    title='Distance vs Step',
+    xaxis_title='Step',
     yaxis_title='Distance',
     xaxis=dict(showline=True, showgrid=True),
     yaxis=dict(showline=True, showgrid=True)
 )
 
-# Afficher le graphique interactif
+# Display the interactive plot
 fig.show()
+
 
