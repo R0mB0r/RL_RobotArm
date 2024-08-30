@@ -119,9 +119,10 @@ class Xarm6ReachEnv(Xarm6):
         if terminated:
             self.is_reached = True
 
+
         if not self.success_reset:
             terminated = False
- 
+
         if self.is_reached and self.fix:
             obs = self._get_obs().copy()
             info = {}

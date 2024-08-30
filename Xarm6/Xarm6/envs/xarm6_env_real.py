@@ -58,7 +58,7 @@ class Xarm6Real(gym.Env):
         self.set_joint_angles(target_arm_angles)
 
     def arm_joint_ctrl_to_target_arm_angles(self, arm_joint_ctrl):
-        arm_joint_ctrl *= 0.025
+        arm_joint_ctrl *= 0.015
         current_joint_angles = np.array([self.get_joint_angle(i) for i in range(6)])
         current_arm_joint_angles = current_joint_angles[:6]
         

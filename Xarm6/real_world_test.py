@@ -16,7 +16,7 @@ def create_env(env_name):
         raise RuntimeError(f"Error while creating the environment: {e}")
 
 
-def test(model, env, num_steps=1_000, sleep_duration=0.2):
+def test(model, env, num_steps=1600, sleep_duration=0.2):
     """Performs a final test to visualize the agent's performance and display the rewards."""
     observations = env.reset()
     states = None
@@ -50,10 +50,10 @@ if __name__ == "__main__":
     test_env = DummyVecEnv([lambda: create_env(env_name)])
 
     # Load the environment normalization
-    test_env = VecNormalize.load(f"Xarm6/Trainings/vec_normalize-{env_name}.pkl", test_env)
+    test_env = VecNormalize.load(f"Xarm6/Trainings/vec_normalize-Xarm6ReachEnv.pkl", test_env)
 
     # Load the trained model
-    model = PPO.load(f"Xarm6/Trainings/ppo-{env_name}.zip")
+    model = PPO.load(f"Xarm6/Trainings/ppo-Xarm6ReachEnv.zip")
 
     # Run the test
     test(model, test_env)

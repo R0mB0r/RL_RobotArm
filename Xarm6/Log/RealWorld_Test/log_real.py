@@ -2,11 +2,11 @@ import numpy as np
 import plotly.graph_objects as go
 
 # Lire les valeurs depuis le fichier texte
-with open("distances_real.txt", "r") as file:
+with open("Xarm6/Log/RealWorld_Test/distances_real.txt", "r") as file:
     distances = [float(line.strip()) for line in file]
 
 # Conserver uniquement les 1000 dernières valeurs, ou toutes si moins de 1000
-num_values_to_show = 1000
+num_values_to_show = 1600
 if len(distances) > num_values_to_show:
     distances = distances[-num_values_to_show:]
 

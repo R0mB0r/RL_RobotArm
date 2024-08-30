@@ -10,7 +10,7 @@ for task in ["Reach", "Force", "ReachReal"]:
     register(
         id=env_id,
         entry_point=f"Xarm6.envs:Xarm6{task}Env",
-        max_episode_steps=400,
+        max_episode_steps=1600,
     )
 
     ENV_IDS.append(env_id)

@@ -30,7 +30,8 @@ class Xarm6ReachRealEnv(Xarm6Real):
         terminated = bool(info["is_success"])
         truncated = self.compute_truncated(observation["achieved_goal"], self.goal, info)
         reward = self.compute_reward(observation["achieved_goal"], self.goal, info)
-        print("r ", reward)
+
+        print(terminated)
 
         return observation, reward, terminated, truncated, info
 
@@ -48,7 +49,7 @@ class Xarm6ReachRealEnv(Xarm6Real):
     def _is_success(self, achieved_position: np.ndarray, desired_goal: np.ndarray) -> np.float32:
         distance = self.goal_distance(achieved_position, desired_goal)
         # Ouvrir le fichier en mode ajout (append) pour ne pas écraser les données existantes
-        with open("distances_real.txt", "a") as file:
+        with open("Xarm6/Log/RealWorld_Test/distances_real.txt", "a") as file:
             file.write(f"{distance}\n")
         # Vérifier si la distance est inférieure au seuil
         return (distance < self.distance_threshold).astype(np.float32)
