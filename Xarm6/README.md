@@ -37,7 +37,7 @@ python3 xarm6_real_action_sampler.py
 
 `Untrained Reach model real log: distance as a function of steps`|
 |:------------------------:|
-<img src="/Pictures/Xarm6/xarm6_real_Reach_untrained.png" alt="" width="230"/>|
+<img src="/Pictures/Xarm6/xarm6_real_Reach_untrained.png" alt="" width=""/>|
 
 </div>
 
@@ -73,10 +73,46 @@ python3 ppo_xarm6_training_pipeline.py  --show_spaces --training --total_timeste
 |:------------------------:|:------------------------:| 
 <img src="/Pictures/Xarm6/xarm6_sim_Reach_trained.gif" alt="" width="230"/>| <img src="/Pictures/Xarm6/xarm6_sim_Reach_log_trained.png" />
 
+For the `Reach` task: 
+
+- reward = - distance_beetwen_ee_effector_and_goal_position
+- observation = {​  
+                    "observation": (ee_position, ee_velocity),​
+                    "achieved_goal": ee_position,​
+                    "desired_goal": goal_position
+                ​}
+
 </div>
 
 ### Force Env Trained Simulation
 
+<div align="center">
+
+`Trained Force model simulation`| `Trained Force model log: Force, Distance, Speed and Rotationnal speed as function of timestep`|
+<img src="/Pictures/Xarm6/xarm6_sim_Force_trained.gif"/>| <img src="/Pictures/Xarm6/xarm6_sim_Force_log_trained.png"/>
+
+</div>
+
+For the `Force` task:
+
+- Reward:   If distance < treshold and contact > 0:​
+                reward = - beta*force_error​
+            Else:​
+                reward = - alpha*distance​
+
+(where alpha and beta are constant chosen empirically)
+
+- Observation = {​
+                    "observation": (ee_position, ee_velocity, ee_force),​
+                    "achieved_goal": (ee_position, ee_force),  ​
+                    "desired_goal": (goal_position, goal_force),​
+                }​
+
+As shown in the graph, the robot successfully reaches the target position but struggles to apply the desired force.
+
+The real challenge of this work lies in combining these two tasks effectively. One potential solution could be to find the appropriate coefficients or to design an optimal reward function that balances both tasks.
+
+Currently, this solution remains an open question in the field of research, and much work is needed to develop a robust and permanent solution.
 
 ## Implementation on the Real-World Robot
 
