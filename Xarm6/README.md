@@ -33,8 +33,14 @@ python3 xarm6_real_action_sampler.py
 
 </div> 
 
+<div align="center">
 
-Real model
+`Untrained Reach model real log: distance as a function of steps`|
+|:------------------------:|
+<img src="/Pictures/Xarm6/xarm6_real_Reach_untrained.png" alt="" width="230"/>|
+
+</div>
+
 
 ## Training, Evaluation and Simulation
 
@@ -67,6 +73,7 @@ python3 ppo_xarm6_training_pipeline.py  --show_spaces --training --total_timeste
 |:------------------------:|:------------------------:| 
 <img src="/Pictures/Xarm6/xarm6_sim_Reach_trained.gif" alt="" width="230"/>| <img src="/Pictures/Xarm6/xarm6_sim_Reach_log_trained.png" />
 
+</div>
 
 ### Force Env Trained Simulation
 
@@ -78,3 +85,17 @@ One of the main objectives of this work is to implement a reinforcement learning
 To achieve this, I had to create two entire environments: one for controlling the robot (`xarm6_env_real.py`) and one for the task (`reach_real.py`), similar to the simulation models.
 
 The script real_world_test.py allows running a model trained in simulation on the real robot.
+
+<div align="center">
+
+`Trained Reach model real log: distance as a function of steps`|
+ |:------------------------:|
+ <img src="/Pictures/Xarm6/xarm6_real_Reach_log_trained.png" alt="" width="230"/>|
+
+</div>
+
+From this log, we can observe an error of approximately 4 cm between the position of the end effector and the target threshold.
+
+Identifying the exact cause of this error and determining how to reduce it is challenging. One potential solution could be increasing the number of timesteps during training to allow the model more time to learn and fine-tune its actions.
+
+However, due to time constraints during my internship, I was unable to fully address this issue.

@@ -56,7 +56,7 @@ class Xarm6ForceEnv(Xarm6):
         terminated = bool(info["is_success"])
         reward = self.compute_reward(obs["observation"], obs["achieved_goal"], obs["desired_goal"])
 
-        # self.update_plot()
+        self.update_plot()
 
         return obs, reward, terminated, truncated, info
 
@@ -73,7 +73,6 @@ class Xarm6ForceEnv(Xarm6):
         }
 
     def compute_reward(self, observation: np.ndarray, achieved_goal: np.ndarray, desired_goal: np.ndarray, alpha=100000, beta=0.001, gamma=1000) -> float:
-        offset = 0.0013198
         ee_position = achieved_goal[0:3]
         goal_position = desired_goal[0:3]
         
