@@ -73,6 +73,8 @@ python3 ppo_xarm6_training_pipeline.py  --show_spaces --training --total_timeste
 |:------------------------:|:------------------------:| 
 <img src="/Pictures/Xarm6/xarm6_sim_Reach_trained.gif" alt="" width="230"/>| <img src="/Pictures/Xarm6/xarm6_sim_Reach_log_trained.png" />
 
+</div>
+
 For the `Reach` task: 
 
 - reward = - distance_beetwen_ee_effector_and_goal_position
